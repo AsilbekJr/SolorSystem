@@ -2192,8 +2192,10 @@ let lastSendT = 0;
 
 function connectWS() {
   setBootStatus('Connecting to server...');
-  const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
-  ws = new WebSocket(`${proto}//${location.host}`);
+  // Support dynamic WebSocket URL for split deployment (Vercel static + separate WS server)
+  // Set window.WS_URL in index.html or configure via Vercel env var
+  const wsUrl = window.WS_URL || (location.protocol === 'https:' ? 'wss:' : 'ws:') + '//' + location.host;
+  ws = new WebSocket(wsUrl);
   ws.onopen = () => {
     aidaSay('Tarmoq ulanishi tiklandi. Boshqa pilotlar ko\'rinmoqda.');
     // Identify persistent cloud UID for online-presence tracking (friends online status)

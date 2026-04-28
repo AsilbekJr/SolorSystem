@@ -12,6 +12,12 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="Odyssey" />
 <link rel="manifest" href="./manifest.webmanifest" />
+<script>
+  // Configure WebSocket URL for split deployment (Vercel static + Railway/Render WS)
+  // For Vercel: set WS_URL environment variable in project settings
+  // For local: leave empty to use same host
+  window.WS_URL = '{{WS_URL}}'.replace('{{WS_URL}}', '') || '';
+</script>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><defs><radialGradient id='g'><stop offset='0%25' stop-color='%23ffd060'/><stop offset='100%25' stop-color='%23ff7733'/></radialGradient></defs><circle cx='32' cy='32' r='28' fill='url(%23g)'/><circle cx='48' cy='20' r='3' fill='%237cd4ff'/></svg>" />
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
