@@ -12,7 +12,7 @@ const I18N = {
     'splash.subtitle': "SOL'S LAST BREATH",
     'splash.intro':    "Yer yadrosi o'lmoqda. Quyosh tizimining chetiga safar qiling, har bir sayyoradan modul yig'ing va Genesis zarrasini olib qayting. Boshqa pilotlar yordam berishi yoki o'g'irlashi mumkin.",
     'splash.launch':   '▶ LAUNCH',
-    'splash.controls': "W/S — gaz   ·   A/D — yaw   ·   Q/E — roll   ·   sichqoncha — qarash   ·   Shift — boost   ·   Space — tormoz   ·   B (hold) — emote",
+    'splash.controls': "W/S — gaz   ·   A/D — yaw   ·   Q/E — roll   ·   sichqoncha — qarash   ·   Shift — boost   ·   Space — tormoz   ·   B (hold) — emote   ·   H — hail (do'stlarga ping)",
     'splash.namePlaceholder': 'Pilot nomi',
     'chat.placeholder':       'Xabar yozing... (Enter — yuborish, Esc — bekor)',
     'splash.pilot':           '⬢ PILOT FILE',
@@ -42,12 +42,61 @@ const I18N = {
     'shop.equip':             'EQUIP',
     'shop.equipped':          '★ EQUIPPED',
     'shop.buy':               'BUY',
+    'tutorial.s1':            '⌨ <b>WASD</b> — gaz · <b>A/D</b> — yaw · <b>Q/E</b> — roll',
+    'tutorial.s2':            '🖱 <b>Sichqoncha</b> — qarash · <b>LMB</b> — ot · <b>[1/2/3]</b> — qurol',
+    'tutorial.s3':            '⚡ <b>[Shift]</b> — boost · <b>[Space]</b> — tormoz · <b>[F]</b> — Jump Gate',
+    'tutorial.s4':            '✦ Sayyora yonidagi sariq modulni 14u\'gacha yaqin keling — avtomatik olinadi',
+    'tutorial.s5':            '⛽ Past resurs? Sayyoraga 80u dan yaqin uchsangiz <b>doking</b> + recharge',
+    'tutorial.s6':            '⛨ <b>[P]</b> — pause + sozlamalar + shipyard (credits → upgrade)',
+    'tutorial.s7':            '★ MAQSAD: 7 modul yig\'ing → Neptun\'dan <b>Genesis</b> → Yerga qayting',
+    'bp.title':               '★ BATTLE PASS',
+    'bp.tier':                'TIER {n}/{max}',
+    'bp.rewards':             'MUKOFOTLAR',
+    'bp.rewardsReady':        '★ MUKOFOTLAR TAYYOR',
+    'bp.maxTier':             'MAX TIER',
+    'bp.next':                '→ {label} @ {xp} XP',
+    'bp.claim':               'CLAIM',
+    'bp.premiumTitle':        '⬡  PREMIUM BATTLE PASS',
+    'bp.premiumDesc':         "Har bir tier uchun qo'shimcha mukofot · Maxsus badges · Star Master + 5000⬢ T20'da",
+    'bp.premiumUnlock':       '{cost}⬢  UNLOCK',
+    'bp.premiumNotEnough':    '{cost}⬢  (yetmaydi)',
+    'bp.premiumActive':       "★ PREMIUM AKTIV — barcha tier'lar uchun 2x mukofot",
+    'bp.trackFree':           'FREE',
+    'bp.trackPrem':           'PREMIUM',
+    'bp.tierUp':              '★ BATTLE PASS TIER {tier}! Mukofotni olish: {label}',
+    'bp.season':              'SEZON {id}',
+    'bp.seasonResetTitle':    '★ YANGI SEZON BOSHLANDI',
+    'bp.seasonResetDesc':     "Battle Pass yangi sezonga reset qilindi. Oldingi yutuqlar (kemalar, badges) saqlandi. Yangi tier'lar va mukofotlar kutmoqda!",
+    'bp.seasonResetCta':      "▶ KIRISH",
+    'bp.seasonEnds':          "Sezon tugashiga: {days} kun",
+    'friends.title':          '👥 DO\'STLAR',
+    'friends.empty':          "Hali do'stlar yo'q. Kod orqali qo'shing.",
+    'friends.online':         '{n} ONLINE',
+    'friends.code':           "DO'ST KODI",
+    'friends.yourCode':       "Sizning kodingiz: {code}",
+    'friends.codeHint':       "Bu kodni do'stlaringizga bering — ular sizni qo'shishlari mumkin",
+    'friends.addPlaceholder': '8-belgili kodni kiriting',
+    'friends.addBtn':         '+ QO\'SHISH',
+    'friends.remove':         'O\'chirish',
+    'friends.added':          "✓ {name} do'stlarga qo'shildi",
+    'friends.errSelf':        "O'zingizni qo\'sha olmaysiz",
+    'friends.errExists':      "Bu pilot allaqachon do'stlaringizda",
+    'friends.errNotFound':    'Bu kod bilan pilot topilmadi',
+    'friends.errBadCode':     "Kod 8 ta hex belgi bo'lishi kerak",
+    'friends.errGeneric':     "Server xatoligi. Keyinroq urinib ko'ring",
+    'friends.copied':         '✓ KOD NUSXALANDI',
+    'friends.confirmRemove':  "{name} ni do'stlardan o'chirasizmi?",
+    'friends.errRateLimit':   "Juda tez urinmoqdasiz. Bir daqiqadan keyin qayta urining.",
+    'friends.errLimitMax':    "Do'stlar ro‘yxati to'lgan ({n} max)",
+    'lb.tabGlobal':           'GLOBAL',
+    'lb.tabFriends':          "DO'STLAR",
+    'lb.noFriendScores':      "Do'stlar reytingda hali yo'q",
   },
   en: {
     'splash.subtitle': "SOL'S LAST BREATH",
     'splash.intro':    "Earth's core is dying. Travel to the edge of the solar system, collect modules from each planet, and bring back the Genesis Particle. Other pilots may help — or steal from you.",
     'splash.launch':   '▶ LAUNCH',
-    'splash.controls': 'W/S — thrust   ·   A/D — yaw   ·   Q/E — roll   ·   mouse — look   ·   Shift — boost   ·   Space — brake   ·   B (hold) — emote',
+    'splash.controls': 'W/S — thrust   ·   A/D — yaw   ·   Q/E — roll   ·   mouse — look   ·   Shift — boost   ·   Space — brake   ·   B (hold) — emote   ·   H — hail (ping friends)',
     'splash.namePlaceholder': 'Pilot name',
     'chat.placeholder':       'Type a message... (Enter — send, Esc — cancel)',
     'splash.pilot':           '⬢ PILOT FILE',
@@ -77,12 +126,61 @@ const I18N = {
     'shop.equip':             'EQUIP',
     'shop.equipped':          '★ EQUIPPED',
     'shop.buy':               'BUY',
+    'tutorial.s1':            '⌨ <b>WASD</b> — thrust · <b>A/D</b> — yaw · <b>Q/E</b> — roll',
+    'tutorial.s2':            '🖱 <b>Mouse</b> — look · <b>LMB</b> — fire · <b>[1/2/3]</b> — weapon',
+    'tutorial.s3':            '⚡ <b>[Shift]</b> — boost · <b>[Space]</b> — brake · <b>[F]</b> — Jump Gate',
+    'tutorial.s4':            '✦ Approach the yellow module near a planet within 14u — auto-collected',
+    'tutorial.s5':            '⛽ Low on resources? Fly within 80u of a planet to <b>dock</b> + recharge',
+    'tutorial.s6':            '⛨ <b>[P]</b> — pause + settings + shipyard (credits → upgrade)',
+    'tutorial.s7':            '★ GOAL: collect 7 modules → grab <b>Genesis</b> from Neptune → return to Earth',
+    'bp.title':               '★ BATTLE PASS',
+    'bp.tier':                'TIER {n}/{max}',
+    'bp.rewards':             'REWARDS',
+    'bp.rewardsReady':        '★ REWARDS READY',
+    'bp.maxTier':             'MAX TIER',
+    'bp.next':                '→ {label} @ {xp} XP',
+    'bp.claim':               'CLAIM',
+    'bp.premiumTitle':        '⬡  PREMIUM BATTLE PASS',
+    'bp.premiumDesc':         'Bonus reward per tier · Exclusive badges · Star Master + 5000⬢ at T20',
+    'bp.premiumUnlock':       '{cost}⬢  UNLOCK',
+    'bp.premiumNotEnough':    '{cost}⬢  (insufficient)',
+    'bp.premiumActive':       '★ PREMIUM ACTIVE — bonus rewards on every tier',
+    'bp.trackFree':           'FREE',
+    'bp.trackPrem':           'PREMIUM',
+    'bp.tierUp':              '★ BATTLE PASS TIER {tier}! Claim reward: {label}',
+    'bp.season':              'SEASON {id}',
+    'bp.seasonResetTitle':    '★ NEW SEASON STARTED',
+    'bp.seasonResetDesc':     'Battle Pass has been reset for the new season. Earned ships and badges are preserved. New tiers and rewards await!',
+    'bp.seasonResetCta':      '▶ ENTER',
+    'bp.seasonEnds':          'Season ends in: {days} days',
+    'friends.title':          '👥 FRIENDS',
+    'friends.empty':          'No friends yet. Add via friend code.',
+    'friends.online':         '{n} ONLINE',
+    'friends.code':           'FRIEND CODE',
+    'friends.yourCode':       'Your code: {code}',
+    'friends.codeHint':       'Share this code so others can add you',
+    'friends.addPlaceholder': 'Enter 8-char code',
+    'friends.addBtn':         '+ ADD',
+    'friends.remove':         'Remove',
+    'friends.added':          '✓ {name} added to friends',
+    'friends.errSelf':        "You can't add yourself",
+    'friends.errExists':      'This pilot is already in your friends',
+    'friends.errNotFound':    'No pilot found with this code',
+    'friends.errBadCode':     'Code must be 8 hex characters',
+    'friends.errGeneric':     'Server error. Try again later',
+    'friends.copied':         '✓ CODE COPIED',
+    'friends.confirmRemove':  'Remove {name} from friends?',
+    'friends.errRateLimit':   'Too many attempts. Try again in a minute.',
+    'friends.errLimitMax':    'Friend list is full ({n} max)',
+    'lb.tabGlobal':           'GLOBAL',
+    'lb.tabFriends':          'FRIENDS',
+    'lb.noFriendScores':      'No friend scores yet',
   },
   ru: {
     'splash.subtitle': "ПОСЛЕДНИЙ ВЗДОХ СОЛНЦА",
     'splash.intro':    "Ядро Земли умирает. Путешествуйте к краю Солнечной системы, собирайте модули с каждой планеты и верните Частицу Генезиса. Другие пилоты могут помочь — или украсть.",
     'splash.launch':   '▶ СТАРТ',
-    'splash.controls': 'W/S — тяга   ·   A/D — рысканье   ·   Q/E — крен   ·   мышь — обзор   ·   Shift — буст   ·   Space — тормоз   ·   B (удерж.) — эмоция',
+    'splash.controls': 'W/S — тяга   ·   A/D — рысканье   ·   Q/E — крен   ·   мышь — обзор   ·   Shift — буст   ·   Space — тормоз   ·   B (удерж.) — эмоция   ·   H — пинг друзьям',
     'splash.namePlaceholder': 'Имя пилота',
     'chat.placeholder':       'Введите сообщение... (Enter — отправить, Esc — отмена)',
     'splash.pilot':           '⬢ ПРОФИЛЬ',
@@ -112,6 +210,55 @@ const I18N = {
     'shop.equip':             'ЭКИПИРОВАТЬ',
     'shop.equipped':          '★ ЭКИПИРОВАН',
     'shop.buy':               'КУПИТЬ',
+    'tutorial.s1':            '⌨ <b>WASD</b> — тяга · <b>A/D</b> — рысканье · <b>Q/E</b> — крен',
+    'tutorial.s2':            '🖱 <b>Мышь</b> — обзор · <b>ЛКМ</b> — огонь · <b>[1/2/3]</b> — оружие',
+    'tutorial.s3':            '⚡ <b>[Shift]</b> — буст · <b>[Space]</b> — тормоз · <b>[F]</b> — Jump Gate',
+    'tutorial.s4':            '✦ Приблизьтесь к жёлтому модулю у планеты на 14u — авто-сбор',
+    'tutorial.s5':            '⛽ Мало ресурсов? Подлетите к планете на 80u — <b>стыковка</b> + зарядка',
+    'tutorial.s6':            '⛨ <b>[P]</b> — пауза + настройки + верфь (кредиты → улучшение)',
+    'tutorial.s7':            '★ ЦЕЛЬ: соберите 7 модулей → возьмите <b>Генезис</b> с Нептуна → вернитесь на Землю',
+    'bp.title':               '★ БОЕВОЙ ПРОПУСК',
+    'bp.tier':                'УРОВЕНЬ {n}/{max}',
+    'bp.rewards':             'НАГРАДЫ',
+    'bp.rewardsReady':        '★ НАГРАДЫ ГОТОВЫ',
+    'bp.maxTier':             'МАКС. УРОВЕНЬ',
+    'bp.next':                '→ {label} @ {xp} XP',
+    'bp.claim':               'ЗАБРАТЬ',
+    'bp.premiumTitle':        '⬡  PREMIUM БОЕВОЙ ПРОПУСК',
+    'bp.premiumDesc':         'Бонус на каждом уровне · Эксклюзивные значки · Star Master + 5000⬢ на T20',
+    'bp.premiumUnlock':       '{cost}⬢  АКТИВИРОВАТЬ',
+    'bp.premiumNotEnough':    '{cost}⬢  (недостаточно)',
+    'bp.premiumActive':       '★ PREMIUM АКТИВЕН — бонусы на каждом уровне',
+    'bp.trackFree':           'FREE',
+    'bp.trackPrem':           'PREMIUM',
+    'bp.tierUp':              '★ УРОВЕНЬ {tier}! Заберите награду: {label}',
+    'bp.season':              'СЕЗОН {id}',
+    'bp.seasonResetTitle':    '★ НОВЫЙ СЕЗОН НАЧАЛСЯ',
+    'bp.seasonResetDesc':     'Боевой пропуск сброшен для нового сезона. Полученные корабли и значки сохранены. Новые уровни и награды ждут!',
+    'bp.seasonResetCta':      '▶ ВОЙТИ',
+    'bp.seasonEnds':          'До конца сезона: {days} дн.',
+    'friends.title':          '👥 ДРУЗЬЯ',
+    'friends.empty':          'Друзей пока нет. Добавьте по коду.',
+    'friends.online':         '{n} ONLINE',
+    'friends.code':           'КОД ДРУГА',
+    'friends.yourCode':       'Ваш код: {code}',
+    'friends.codeHint':       'Поделитесь кодом — друзья смогут вас добавить',
+    'friends.addPlaceholder': 'Введите 8-символьный код',
+    'friends.addBtn':         '+ ДОБАВИТЬ',
+    'friends.remove':         'Удалить',
+    'friends.added':          '✓ {name} добавлен в друзья',
+    'friends.errSelf':        'Нельзя добавить себя',
+    'friends.errExists':      'Этот пилот уже в друзьях',
+    'friends.errNotFound':    'Пилот с таким кодом не найден',
+    'friends.errBadCode':     'Код должен быть из 8 hex-символов',
+    'friends.errGeneric':     'Ошибка сервера. Попробуйте позже',
+    'friends.copied':         '✓ КОД СКОПИРОВАН',
+    'friends.confirmRemove':  'Удалить {name} из друзей?',
+    'friends.errRateLimit':   'Слишком много попыток. Попробуйте через минуту.',
+    'friends.errLimitMax':    'Список друзей переполнен ({n} max)',
+    'lb.tabGlobal':           'ГЛОБАЛЬНЫЙ',
+    'lb.tabFriends':          'ДРУЗЬЯ',
+    'lb.noFriendScores':      'Результатов друзей пока нет',
   },
 };
 const I18N_KEY = 'odyssey.lang';
@@ -159,6 +306,8 @@ function setLang(code) {
   if (typeof renderDailySplash === 'function') renderDailySplash();
   if (typeof renderLeaderboardSplash === 'function') renderLeaderboardSplash();
   if (typeof renderFactionSplash === 'function') renderFactionSplash();
+  if (typeof renderBattlePassSplash === 'function') renderBattlePassSplash();
+  if (typeof renderFriendsSplash === 'function') renderFriendsSplash();
   document.documentElement.lang = code;
 }
 // Apply on first load
@@ -325,6 +474,7 @@ const SFX = {
   trade:     () => { playTone(820, 0.10, 'sine', 0.15); setTimeout(() => playTone(1040, 0.10, 'sine', 0.18), 80); setTimeout(() => playTone(1320, 0.12, 'sine', 0.20), 160); },
   pirateFire:() => playTone(640, 0.10, 'square', 0.16, 240),
   bossFire:  () => playTone(180, 0.18, 'sawtooth', 0.20, 80),
+  notify:    () => { playTone(880, 0.10, 'sine', 0.16); setTimeout(() => playTone(1320, 0.14, 'sine', 0.18), 90); },
 };
 
 // ---------- AMBIENT MUSIC (procedural drone + sparkle notes) ----------
@@ -1915,6 +2065,10 @@ window.addEventListener('keydown', (e) => {
     e.preventDefault();
     openTrade();
   }
+  else if (e.code === 'KeyH') {
+    e.preventDefault();
+    if (typeof sendFriendPing === 'function') sendFriendPing();
+  }
   else if (e.code === 'KeyM') {
     e.preventDefault();
     setMuted(!sfxMuted);
@@ -2042,8 +2196,28 @@ function connectWS() {
   ws = new WebSocket(`${proto}//${location.host}`);
   ws.onopen = () => {
     aidaSay('Tarmoq ulanishi tiklandi. Boshqa pilotlar ko\'rinmoqda.');
+    // Identify persistent cloud UID for online-presence tracking (friends online status)
+    try {
+      const uid = localStorage.getItem('odyssey.cloudUid');
+      if (uid && /^[a-f0-9]{16,64}$/i.test(uid)) {
+        ws.send(JSON.stringify({ type: 'hello', uid }));
+      }
+    } catch {}
     if (state.name) ws.send(JSON.stringify({ type: 'name', name: state.name }));
     if (profile.faction) ws.send(JSON.stringify({ type: 'faction', faction: profile.faction }));
+    // Greet user with online friends list (delayed so server processes hello first)
+    setTimeout(() => {
+      if (typeof fetchFriends !== 'function') return;
+      fetchFriends().then((list) => {
+        const online = (list || []).filter(f => f.online);
+        if (online.length === 0) return;
+        const names = online.slice(0, 3).map(f => f.name).join(', ');
+        const more = online.length > 3 ? ` +${online.length - 3}` : '';
+        aidaSay(`👥 ${online.length} do'st online: ${names}${more}`, 6000);
+        // Refresh nearby labels in case any are friends already (after fetchFriends syncs profile.friends)
+        for (const o of otherPlayers.values()) refreshOtherPlayerLabel(o);
+      }).catch(() => {});
+    }, 1200);
   };
   ws.onmessage = (ev) => {
     let m;
@@ -2068,6 +2242,22 @@ function connectWS() {
     } else if (m.type === 'name') {
       const o = otherPlayers.get(m.id);
       if (o) { o.name = m.name; if (o.label) refreshOtherPlayerLabel(o); }
+    } else if (m.type === 'code-update') {
+      const o = otherPlayers.get(m.id);
+      if (o) { o.code = m.code; if (o.label) refreshOtherPlayerLabel(o); }
+    } else if (m.type === 'friend-ping') {
+      addFriendPing(m);
+    } else if (m.type === 'friend-online') {
+      aidaSay(`👥 ${m.name} online — boshlandi!`, 5000);
+      pushChat('FRIEND', `${m.name} (${m.code}) sektorga kirdi`, '#7cffb1');
+      if (typeof SFX !== 'undefined' && SFX.notify) SFX.notify();
+      // Update friendsCache so splash card stays accurate
+      const fr = friendsCache.find(f => f.uid === m.uid);
+      if (fr) { fr.online = true; if (typeof renderFriendsSplash === 'function') renderFriendsSplash(); }
+    } else if (m.type === 'friend-offline') {
+      pushChat('FRIEND', `${m.name} (${m.code}) sektorni tark etdi`, '#7cffb1');
+      const fr = friendsCache.find(f => f.uid === m.uid);
+      if (fr) { fr.online = false; if (typeof renderFriendsSplash === 'function') renderFriendsSplash(); }
     } else if (m.type === 'faction') {
       updateOtherFaction(m.id, m.faction);
     } else if (m.type === 'emote') {
@@ -2093,6 +2283,12 @@ function connectWS() {
   ws.onerror = () => {};
 }
 
+function isCodeMyFriend(code) {
+  if (!code || !Array.isArray(profile.friends)) return false;
+  const lc = code.toLowerCase();
+  return profile.friends.some(fr => (fr.uid || '').slice(0, 8).toLowerCase() === lc);
+}
+
 function addOtherPlayer(p) {
   if (otherPlayers.has(p.id)) return;
   const f = getFaction(p.faction);
@@ -2110,6 +2306,7 @@ function addOtherPlayer(p) {
     name: p.name || `Pilot-${p.id}`,
     hvt: !!p.hvt,
     faction: p.faction || null,
+    code: p.code || null,
     label,
   };
   otherPlayers.set(p.id, o);
@@ -2119,9 +2316,12 @@ function addOtherPlayer(p) {
 function refreshOtherPlayerLabel(o) {
   const f = getFaction(o.faction);
   const enemy = f && profile.faction && isEnemy(profile.faction, o.faction);
+  const friend = isCodeMyFriend(o.code);
   const colorTag = f ? `<span style="color:${f.cssColor}">${f.icon}</span> ` : '';
-  o.label.innerHTML = `<div class="ring" style="${f ? `border-color:${f.cssColor}` : ''}"></div><div>${colorTag}${escapeHtml(o.name)}</div><div class="dist" data-dist></div>`;
+  const friendTag = friend ? `<span class="friend-star" title="Friend">★</span> ` : '';
+  o.label.innerHTML = `<div class="ring" style="${f ? `border-color:${f.cssColor}` : ''}"></div><div>${friendTag}${colorTag}${escapeHtml(o.name)}</div><div class="dist" data-dist></div>`;
   o.label.classList.toggle('enemy', !!enemy);
+  o.label.classList.toggle('friend', !!friend);
 }
 
 function updateOtherFaction(id, factionId) {
@@ -2172,6 +2372,38 @@ function sendFaction(factionId) {
   ws.send(JSON.stringify({ type: 'faction', faction: factionId }));
 }
 function sendChat(text) {
+  // /friend command: broadcast your friend code so nearby pilots can add you
+  if (text === '/friend' || text === '/fc' || text === '/friendcode') {
+    const code = getMyFriendCode();
+    if (!code || code.length < 8) {
+      pushChat('SYSTEM', t('friends.errGeneric'), '#ff7088');
+      return;
+    }
+    text = `📡 ${t('friends.code')}: ${code} — /add ${code}`;
+  }
+  // /add CODE — quick add friend without opening modal
+  const addMatch = /^\/add\s+([a-f0-9]{8})$/i.exec(text);
+  if (addMatch) {
+    const code = addMatch[1];
+    pushChat('SYSTEM', `→ /add ${code.toUpperCase()}`, '#7cffb1');
+    addFriendByCode(code).then(result => {
+      if (result.ok) {
+        pushChat('SYSTEM', t('friends.added', { name: result.friend.name }), '#7cffb1');
+        if (typeof renderFriendsSplash === 'function') renderFriendsSplash();
+      } else {
+        const err = result.error;
+        let msg;
+        if (err === 'self')                msg = t('friends.errSelf');
+        else if (err === 'already_friend') msg = t('friends.errExists');
+        else if (err === 'not_found')      msg = t('friends.errNotFound');
+        else if (err === 'rate_limit')     msg = t('friends.errRateLimit');
+        else if (err === 'limit_reached')  msg = t('friends.errLimitMax', { n: 200 });
+        else                               msg = t('friends.errGeneric');
+        pushChat('SYSTEM', msg, '#ff7088');
+      }
+    });
+    return;
+  }
   if (!ws || ws.readyState !== 1) {
     pushChat(state.name, text, '#ffe14f'); return;
   }
@@ -2489,7 +2721,7 @@ let killcamActive = false;
 let killcamData = null; // { killerId, killerName, killerFaction, weapon, deathPos, startT }
 const killcamTmp = new THREE.Vector3();
 
-function startKillcam(killerId, killerName, killerFaction, weapon) {
+function startKillcam(killerId, killerName, killerFaction, weapon, killerCode) {
   if (killcamActive) return;
   // Killer must still be visible in our AoI
   const killer = otherPlayers.get(killerId);
@@ -2499,6 +2731,7 @@ function startKillcam(killerId, killerName, killerFaction, weapon) {
     killerId,
     killerName: killerName || `Pilot-${killerId}`,
     killerFaction: killerFaction || null,
+    killerCode: killerCode || null,
     weapon: weapon || 'LASER',
     deathPos: state.pos.clone(),
     killerPos: killer.mesh.position.clone(),
@@ -2545,6 +2778,13 @@ function showKillcamOverlay() {
   const f = getFaction(killcamData.killerFaction);
   const factionTxt = f ? f.name : 'UNKNOWN';
   const factionColor = f ? f.cssColor : '#ff7766';
+  // Check if killer is already a friend (don't show button if so)
+  const alreadyFriend = killcamData.killerCode
+    && Array.isArray(profile.friends)
+    && profile.friends.some(f => (f.uid || '').slice(0, 8).toLowerCase() === killcamData.killerCode.toLowerCase());
+  const friendBtnHtml = (killcamData.killerCode && !alreadyFriend)
+    ? `<button class="kc-friend-btn" id="kc-add-friend" data-code="${killcamData.killerCode}" type="button">+ ${t('friends.addBtn').replace('+ ', '')} ${killcamData.killerCode}</button>`
+    : '';
   ov.innerHTML = `
     <div class="kc-vignette"></div>
     <div class="kc-top">
@@ -2562,8 +2802,36 @@ function showKillcamOverlay() {
         <span class="kc-weapon">⚔ ${killcamData.weapon}</span>
         <span class="kc-distance"><span id="kc-dist">—</span></span>
       </div>
+      ${friendBtnHtml}
     </div>
   `;
+  // Wire + Add Friend button (clickable through pointer-events override on .kc-friend-btn)
+  const fbtn = ov.querySelector('#kc-add-friend');
+  if (fbtn) {
+    fbtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const code = fbtn.dataset.code;
+      fbtn.disabled = true;
+      fbtn.textContent = '...';
+      const result = await addFriendByCode(code);
+      if (result.ok) {
+        fbtn.textContent = `✓ ${result.friend.name}`;
+        fbtn.classList.add('ok');
+        if (typeof renderFriendsSplash === 'function') renderFriendsSplash();
+      } else {
+        const err = result.error;
+        let msg;
+        if (err === 'self')                msg = t('friends.errSelf');
+        else if (err === 'already_friend') msg = t('friends.errExists');
+        else if (err === 'not_found')      msg = t('friends.errNotFound');
+        else if (err === 'rate_limit')     msg = t('friends.errRateLimit');
+        else if (err === 'limit_reached')  msg = t('friends.errLimitMax', { n: 200 });
+        else                               msg = t('friends.errGeneric');
+        fbtn.textContent = '✕ ' + msg.split(' ').slice(0, 4).join(' ');
+        fbtn.classList.add('err');
+      }
+    });
+  }
   document.body.appendChild(ov);
 }
 
@@ -2960,6 +3228,8 @@ function updateHUD() {
 
   // Off-screen markers for planets, gates, players
   updateMarkers();
+  // Friend pings (HUD beacons)
+  if (typeof updateFriendPings === 'function') updateFriendPings();
   // Emote bubbles tracked to ships
   if (typeof updateEmoteBubbles === 'function') updateEmoteBubbles();
   // Sun lens flare
@@ -4349,7 +4619,7 @@ function onPvpHit(m) {
     saveProfile();
     // Try to start killcam (only if killer is in AoI)
     if (typeof startKillcam === 'function') {
-      startKillcam(m.from, m.fromName, m.fromFaction, m.weapon || 'LASER');
+      startKillcam(m.from, m.fromName, m.fromFaction, m.weapon || 'LASER', m.fromCode || null);
     }
     gameOver(`${m.fromName || 'Dushman'} (${m.fromFaction}) tomonidan o'ldirildingiz`);
   }
@@ -5798,6 +6068,9 @@ const ACHIEVEMENTS = [
   { id: 'rescuer',       name: 'RESCUER',       icon: '✚', desc: "Distress signal'ga javob bering" },
   { id: 'scavenger',     name: 'SCAVENGER',     icon: '◫', desc: "10 ta salvage konteyner toping (kumulyativ)" },
   { id: 'win',           name: 'SAVIOR',        icon: '★', desc: "Genesis bilan Yerga qayting" },
+  { id: 'first_friend',  name: 'NEW BOND',      icon: '🤝', desc: "Birinchi do'stingizni qo'shing" },
+  { id: 'social_5',      name: 'SQUAD LEADER',  icon: '👥', desc: "5 ta do'st to'plang" },
+  { id: 'buddy_kill',    name: 'WINGMAN',       icon: '⚡', desc: "Buddy Boost faolligida dushman o'ldiring" },
 ];
 
 const defaultProfile = () => ({
@@ -5834,6 +6107,8 @@ const defaultProfile = () => ({
   bpClaimed: [],           // Array of claimed tier indices (0-based)
   bpPremium: false,        // Premium track unlocked
   bpPremiumClaimed: [],    // Array of claimed premium tier indices
+  bpSeasonId: '',          // Tracks current season; reset wipes bp* fields
+  friends: [],             // [{uid, name, addedAt}]
 });
 
 // Faction definitions (lore-driven)
@@ -6393,6 +6668,55 @@ function applyUpgrades() {
   state.batt = state.maxBatt; state.o2 = state.maxO2;
 }
 
+// ---------- BATTLE PASS — SEASON ----------
+// Season cadence: monthly (YYYY-MM). Earn ships/badges persist via ownedShips/achievements.
+function getCurrentBpSeason() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+}
+function getDaysLeftInSeason() {
+  const d = new Date();
+  const lastDay = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+  return Math.max(0, lastDay - d.getDate());
+}
+function checkBpSeasonReset() {
+  const current = getCurrentBpSeason();
+  const stored = profile.bpSeasonId || '';
+  if (stored === current) return false;
+  // First time setting season ID — no notification, no reset
+  if (!stored) {
+    profile.bpSeasonId = current;
+    saveProfile();
+    return false;
+  }
+  // Season has changed — reset progression (keep ownedShips, achievements, credits)
+  profile.bpXp = 0;
+  profile.bpClaimed = [];
+  profile.bpPremium = false;
+  profile.bpPremiumClaimed = [];
+  profile.bpSeasonId = current;
+  saveProfile();
+  return true; // Caller should show notification
+}
+
+function showSeasonResetModal() {
+  if (document.getElementById('bp-season-reset')) return;
+  const ov = document.createElement('div');
+  ov.id = 'bp-season-reset';
+  ov.innerHTML = `
+    <div class="bsr-inner">
+      <div class="bsr-icon">★</div>
+      <div class="bsr-title">${t('bp.seasonResetTitle')}</div>
+      <div class="bsr-season">${t('bp.season', { id: profile.bpSeasonId })}</div>
+      <div class="bsr-desc">${t('bp.seasonResetDesc')}</div>
+      <button class="bsr-btn">${t('bp.seasonResetCta')}</button>
+    </div>
+  `;
+  document.body.appendChild(ov);
+  ov.querySelector('.bsr-btn').addEventListener('click', () => ov.remove());
+  ov.addEventListener('click', (e) => { if (e.target === ov) ov.remove(); });
+}
+
 // ---------- BATTLE PASS (XP + tier rewards) ----------
 const BP_TIER_COUNT = 20;
 const BP_TIERS = (() => {
@@ -6536,21 +6860,182 @@ function showBpXpToast(amount) {
   }, 1800);
 }
 
+// Buddy boost: +25% BP XP when at least 1 friend is nearby (within range)
+const BUDDY_BOOST_RANGE = 600;          // world units (AoI ~ 1200, this is half)
+const BUDDY_BOOST_RANGE_SQ = BUDDY_BOOST_RANGE * BUDDY_BOOST_RANGE;
+const BUDDY_BOOST_MULT = 1.25;          // +25%
+let buddyBoostActive = false;
+let buddyBoostBuddyName = '';
+function checkBuddyBoost() {
+  if (!profile.friends || profile.friends.length === 0) {
+    buddyBoostActive = false; buddyBoostBuddyName = '';
+    return false;
+  }
+  let active = false;
+  let name = '';
+  for (const o of otherPlayers.values()) {
+    if (!o.code || !isCodeMyFriend(o.code)) continue;
+    const d2 = state.pos.distanceToSquared(o.mesh.position);
+    if (d2 <= BUDDY_BOOST_RANGE_SQ) { active = true; name = o.name; break; }
+  }
+  if (active !== buddyBoostActive) {
+    buddyBoostActive = active;
+    buddyBoostBuddyName = name;
+    renderBuddyBoostHud();
+    if (active && typeof SFX !== 'undefined' && SFX.notify) SFX.notify();
+  } else if (active && name !== buddyBoostBuddyName) {
+    buddyBoostBuddyName = name;
+    renderBuddyBoostHud();
+  }
+  return active;
+}
+function renderBuddyBoostHud() {
+  let el = document.getElementById('buddy-boost-hud');
+  if (!buddyBoostActive) {
+    if (el) el.remove();
+    return;
+  }
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'buddy-boost-hud';
+    document.body.appendChild(el);
+  }
+  el.innerHTML = `<span class="bb-icon">★</span><span class="bb-text">BUDDY BOOST</span><span class="bb-mult">+25% XP</span><span class="bb-name">${escapeHtml(buddyBoostBuddyName)}</span>`;
+}
+
 function addBattleXp(amount, reason) {
   if (!amount || amount < 1) return;
+  // Apply buddy boost (check current proximity at award time)
+  let boosted = false;
+  if (checkBuddyBoost()) {
+    amount = Math.round(amount * BUDDY_BOOST_MULT);
+    boosted = true;
+  }
   const before = getBpLevel();
   profile.bpXp = (profile.bpXp || 0) + amount;
   saveProfile();
   showBpXpToast(amount);
+  // Send increment to server for anti-cheat validation
+  if (ws && ws.readyState === 1) {
+    try { ws.send(JSON.stringify({ type: 'bp-xp-add', delta: amount })); } catch {}
+  }
   const after = getBpLevel();
   if (after > before) {
     // Tier up notification (uses AIDA if available)
     const tier = BP_TIERS[after - 1];
     if (typeof aidaSay === 'function') {
-      aidaSay(`★ BATTLE PASS TIER ${after}! Mukofotni olish: ${tier.label}`, 5000);
+      aidaSay(t('bp.tierUp', { tier: after, label: tier.label }), 5000);
     }
     if (typeof SFX !== 'undefined' && SFX.pickup) SFX.pickup();
     if (typeof renderBattlePassSplash === 'function') renderBattlePassSplash();
+  }
+  return boosted;
+}
+// Fetch server-side BP XP on startup (anti-cheat sync)
+async function syncServerBpXp() {
+  const uid = localStorage.getItem('odyssey.cloudUid');
+  const token = localStorage.getItem('odyssey.cloudToken');
+  if (!uid || !token) return;
+  try {
+    const r = await fetch(`/api/bp-xp?uid=${uid}&token=${token}`, { cache: 'no-store' });
+    if (r.ok) {
+      const j = await r.json();
+      if (j.ok && typeof j.bpXp === 'number' && j.bpXp > (profile.bpXp || 0)) {
+        // Server has higher XP (legit from other sessions), adopt it
+        profile.bpXp = j.bpXp;
+        saveProfile();
+        if (typeof renderBattlePassSplash === 'function') renderBattlePassSplash();
+      }
+    }
+  } catch {}
+}
+// Sync shortly after boot
+setTimeout(syncServerBpXp, 2000);
+// Periodic buddy boost check (every 2s) for HUD freshness
+setInterval(() => {
+  if (splash && splash.style.display !== 'none') return;
+  if (!state.alive) return;
+  checkBuddyBoost();
+}, 2000);
+
+// ---------- FRIEND PING SYSTEM ----------
+const PING_DURATION_MS = 8000;
+const PING_COOLDOWN_MS = 5000;
+let lastPingSentT = 0;
+const friendPings = []; // {x,y,z, name, code, t0, el, pos: THREE.Vector3}
+function sendFriendPing() {
+  if (!ws || ws.readyState !== 1) return;
+  const now = performance.now();
+  if (now - lastPingSentT < PING_COOLDOWN_MS) {
+    aidaSay('⏱ Ping cooldown...', 1500);
+    return;
+  }
+  if (!profile.friends || profile.friends.length === 0) {
+    aidaSay("Sizda do'st yo'q. Ping yuborib bo'lmaydi.", 2500);
+    return;
+  }
+  lastPingSentT = now;
+  ws.send(JSON.stringify({ type: 'friend-ping' }));
+  if (typeof SFX !== 'undefined' && SFX.notify) SFX.notify();
+  pushChat('SYSTEM', '📡 Ping do\'stlarga yuborildi', '#7cffb1');
+}
+function addFriendPing(m) {
+  // Avoid duplicate pings from same source within 1s
+  const now = performance.now();
+  for (let i = friendPings.length - 1; i >= 0; i--) {
+    if (friendPings[i].fromUid === m.fromUid && now - friendPings[i].t0 < 1000) return;
+  }
+  const el = document.createElement('div');
+  el.className = 'friend-ping';
+  el.innerHTML = `<div class="fp-arrow">▲</div><div class="fp-name">${escapeHtml(m.fromName || 'Friend')}</div><div class="fp-dist"></div>`;
+  document.body.appendChild(el);
+  friendPings.push({
+    fromUid: m.fromUid,
+    name: m.fromName || 'Friend',
+    code: m.fromCode || '',
+    pos: new THREE.Vector3(+m.x || 0, +m.y || 0, +m.z || 0),
+    t0: now,
+    el,
+  });
+  if (typeof SFX !== 'undefined' && SFX.notify) SFX.notify();
+  aidaSay(`📡 ${m.fromName} sizni chaqirmoqda!`, 4000);
+}
+const _pingProjTmp = new THREE.Vector3();
+function updateFriendPings() {
+  if (!friendPings.length) return;
+  const now = performance.now();
+  for (let i = friendPings.length - 1; i >= 0; i--) {
+    const p = friendPings[i];
+    const age = now - p.t0;
+    if (age >= PING_DURATION_MS) {
+      p.el.remove();
+      friendPings.splice(i, 1);
+      continue;
+    }
+    // Fade
+    const fade = age < 500 ? age / 500 : (age > PING_DURATION_MS - 1000 ? (PING_DURATION_MS - age) / 1000 : 1);
+    p.el.style.opacity = fade.toFixed(2);
+    // Project to screen
+    _pingProjTmp.copy(p.pos);
+    const onScreen = projectToScreen(_pingProjTmp, _pingProjTmp);
+    placeMarker(p.el, _pingProjTmp, onScreen);
+    // Compute distance from player
+    const dist = state.pos.distanceTo(p.pos);
+    const distEl = p.el.querySelector('.fp-dist');
+    if (distEl) distEl.textContent = `${dist.toFixed(0)}u`;
+    // Rotate arrow toward target if off-screen
+    const arrow = p.el.querySelector('.fp-arrow');
+    if (arrow) {
+      if (!onScreen) {
+        const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+        const ang = Math.atan2(_pingProjTmp.y - cy, _pingProjTmp.x - cx) * 180 / Math.PI + 90;
+        arrow.style.transform = `rotate(${ang}deg)`;
+        arrow.style.opacity = '1';
+      } else {
+        arrow.style.transform = 'rotate(0deg)';
+        arrow.style.opacity = '0.4';
+      }
+    }
   }
 }
 
@@ -6597,6 +7082,11 @@ function profileOnKill(kindKey) {
   if (typeof dailyOnKill === 'function') dailyOnKill(kindKey);
   if (profile.totalKills >= 5)  unlockAchievement('pirate_5');
   if (profile.totalKills >= 25) unlockAchievement('pirate_25');
+  // Buddy boost killed achievement
+  if (typeof buddyBoostActive !== 'undefined' && buddyBoostActive) {
+    profile.buddyKills = (profile.buddyKills || 0) + 1;
+    unlockAchievement('buddy_kill');
+  }
 }
 function profileOnModule(isFinal) {
   profile.totalModulesFound += 1;
@@ -6708,6 +7198,7 @@ function fmtTime(sec) {
   return `${m}:${String(s).padStart(2, '0')}`;
 }
 
+let lbCurrentTab = 'global'; // 'global' | 'friends'
 async function renderLeaderboardSplash() {
   if (!splash) return;
   let panel = document.getElementById('lb-splash');
@@ -6725,20 +7216,47 @@ async function renderLeaderboardSplash() {
     return;
   }
   const myName = (profile.name || '').toLowerCase();
-  panel.innerHTML = `
-    <div class="lb-title">${t('splash.leaderboard')} <span class="lb-sub">top ${entries.length}</span></div>
-    <div class="lb-list">
-      ${entries.slice(0, 10).map((e, i) => `
-        <div class="lb-row ${e.name.toLowerCase() === myName ? 'me' : ''}">
-          <span class="lb-rank">#${i+1}</span>
-          <span class="lb-name">${escapeHtml(e.name)}</span>
-          <span class="lb-time">${fmtTime(e.timeSec)}</span>
-          <span class="lb-mods">${e.modules}✪</span>
-          <span class="lb-date">${e.date}</span>
-        </div>
-      `).join('')}
+  // Build friend-name set (lowercase) for filter
+  const friendNames = new Set();
+  if (Array.isArray(friendsCache)) for (const f of friendsCache) friendNames.add((f.name || '').toLowerCase());
+  // Always include self in friends tab
+  if (myName) friendNames.add(myName);
+  const hasFriendsTab = friendsCache && friendsCache.length > 0;
+  // Filter entries based on tab; if no friends, force global
+  if (!hasFriendsTab) lbCurrentTab = 'global';
+  const filtered = lbCurrentTab === 'friends'
+    ? entries.filter(e => friendNames.has((e.name || '').toLowerCase()))
+    : entries;
+  const tabsHtml = hasFriendsTab ? `
+    <div class="lb-tabs">
+      <button class="lb-tab ${lbCurrentTab === 'global' ? 'active' : ''}" data-tab="global">${t('lb.tabGlobal')}</button>
+      <button class="lb-tab ${lbCurrentTab === 'friends' ? 'active' : ''}" data-tab="friends">${t('lb.tabFriends')} (${friendsCache.length + 1})</button>
     </div>
+  ` : '';
+  const rowsHtml = filtered.length === 0
+    ? `<div class="lb-empty" style="padding:14px;">${t('lb.noFriendScores')}</div>`
+    : `<div class="lb-list">
+        ${filtered.slice(0, 10).map((e, i) => `
+          <div class="lb-row ${e.name.toLowerCase() === myName ? 'me' : ''} ${friendNames.has(e.name.toLowerCase()) && e.name.toLowerCase() !== myName ? 'friend' : ''}">
+            <span class="lb-rank">#${i+1}</span>
+            <span class="lb-name">${friendNames.has(e.name.toLowerCase()) && e.name.toLowerCase() !== myName ? '★ ' : ''}${escapeHtml(e.name)}</span>
+            <span class="lb-time">${fmtTime(e.timeSec)}</span>
+            <span class="lb-mods">${e.modules}✪</span>
+            <span class="lb-date">${e.date}</span>
+          </div>
+        `).join('')}
+      </div>`;
+  panel.innerHTML = `
+    <div class="lb-title">${t('splash.leaderboard')} <span class="lb-sub">${lbCurrentTab === 'friends' ? `friends · ${filtered.length}` : `top ${entries.length}`}</span></div>
+    ${tabsHtml}
+    ${rowsHtml}
   `;
+  panel.querySelectorAll('.lb-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      lbCurrentTab = btn.dataset.tab;
+      renderLeaderboardSplash();
+    });
+  });
 }
 
 // ---- Stats screen UI ----
@@ -6760,6 +7278,8 @@ function buildStatsScreen() {
         <div><span>UMUMIY VAQT</span><b>${formatTime(profile.totalPlaytimeSec)}</b></div>
         <div><span>CREDITS</span><b style="color:#ffd060;">${profile.credits || 0}⬢</b></div>
         <div><span>BATTLE PASS</span><b style="color:#d8a8ff;">TIER ${getBpLevel()} · ${profile.bpXp || 0} XP</b></div>
+        <div><span>DO'STLAR</span><b style="color:#7cffb1;">${(profile.friends || []).length} 👥</b></div>
+        <div><span>BUDDY KILLS</span><b style="color:#7cffb1;">${profile.buddyKills || 0} ⚡</b></div>
       </div>
       ${(() => {
         // Earned BP badges (claimed tiers with badge unlocks) — both tracks
@@ -7362,13 +7882,13 @@ function renderDailySplash() {
 
 // ---- TUTORIAL (first-time onboarding) ----
 const TUTORIAL_STEPS = [
-  { text: '⌨ <b>WASD</b> — thrust · <b>A/D</b> — yaw · <b>Q/E</b> — roll', dur: 8 },
-  { text: '🖱 <b>Sichqoncha</b> — qarash · <b>LMB</b> — ot · <b>[1/2/3]</b> — qurol', dur: 8 },
-  { text: '⚡ <b>[Shift]</b> — boost · <b>[Space]</b> — tormoz · <b>[F]</b> — Jump Gate', dur: 7 },
-  { text: '✦ Sayyora yonidagi sariq modulni 14u\'gacha yaqin keling — avtomatik olinadi', dur: 8 },
-  { text: '⛽ Past resurs? Sayyoraga 80u dan yaqin uchsangiz <b>doking</b> + recharge', dur: 7 },
-  { text: '⛨ <b>[P]</b> — pause + sozlamalar + shipyard (credits → upgrade)', dur: 7 },
-  { text: '★ MAQSAD: 7 modul yig\'ing → Neptun\'dan <b>Genesis</b> → Yerga qayting', dur: 9 },
+  { key: 'tutorial.s1', dur: 8 },
+  { key: 'tutorial.s2', dur: 8 },
+  { key: 'tutorial.s3', dur: 7 },
+  { key: 'tutorial.s4', dur: 8 },
+  { key: 'tutorial.s5', dur: 7 },
+  { key: 'tutorial.s6', dur: 7 },
+  { key: 'tutorial.s7', dur: 9 },
 ];
 
 let tutorialIdx = -1;
@@ -7411,7 +7931,7 @@ function buildTutorialEl() {
 function showTutorialStep() {
   if (!tutorialEl || !tutorialActive()) return;
   const step = TUTORIAL_STEPS[tutorialIdx];
-  tutorialEl.querySelector('.tip').innerHTML = step.text;
+  tutorialEl.querySelector('.tip').innerHTML = t(step.key);
   tutorialEl.querySelector('.bar').style.width = '0%';
   tutorialT = step.dur;
   tutorialEl.style.display = 'block';
@@ -7466,15 +7986,22 @@ function renderBattlePassSplash() {
   const pct = Math.round(p.pct * 100);
   const claimable = hasUnclaimedBpTier() || hasUnclaimedBpPremiumTier();
   const nextTier = p.lvl < BP_TIER_COUNT ? BP_TIERS[p.lvl] : null;
+  const daysLeft = getDaysLeftInSeason();
   panel.innerHTML = `
-    <div class="bp-title">★ BATTLE PASS <span class="bp-tier">TIER ${p.lvl}/${BP_TIER_COUNT}</span></div>
+    <div class="bp-title">${t('bp.title')} <span class="bp-tier">${t('bp.tier', { n: p.lvl, max: BP_TIER_COUNT })}</span></div>
+    <div class="bp-season-row">
+      <span class="bp-season-tag">${t('bp.season', { id: profile.bpSeasonId || getCurrentBpSeason() })}</span>
+      <span class="bp-season-end">${t('bp.seasonEnds', { days: daysLeft })}</span>
+    </div>
     <div class="bp-bar"><div class="bp-fill" style="width:${pct}%"></div></div>
     <div class="bp-meta">
       <span>${p.xp} XP</span>
-      ${nextTier ? `<span class="bp-next">→ ${nextTier.label} @ ${nextTier.xpReq} XP</span>` : '<span class="bp-max">MAX TIER</span>'}
+      ${nextTier
+        ? `<span class="bp-next">${t('bp.next', { label: nextTier.label, xp: nextTier.xpReq })}</span>`
+        : `<span class="bp-max">${t('bp.maxTier')}</span>`}
     </div>
     <button class="bp-open-btn ${claimable ? 'has-claim' : ''}">
-      ${claimable ? '★ MUKOFOTLAR TAYYOR' : 'MUKOFOTLAR'}
+      ${claimable ? t('bp.rewardsReady') : t('bp.rewards')}
     </button>
   `;
   panel.querySelector('.bp-open-btn').addEventListener('click', openBattlePassModal);
@@ -7489,22 +8016,22 @@ function openBattlePassModal() {
     const isPrem = !!profile.bpPremium;
     const canAfford = (profile.credits || 0) >= BP_PREMIUM_COST;
     const premBanner = isPrem
-      ? `<div class="bpm-prem-active">★ PREMIUM AKTIV — barcha tier'lar uchun 2x mukofot</div>`
+      ? `<div class="bpm-prem-active">${t('bp.premiumActive')}</div>`
       : `<div class="bpm-prem-cta">
            <div class="bpm-prem-cta-text">
-             <div class="bpm-prem-cta-title">⬡  PREMIUM BATTLE PASS</div>
-             <div class="bpm-prem-cta-desc">Har bir tier uchun qo'shimcha mukofot · Maxsus badges · Star Master + 5000⬢ T20'da</div>
+             <div class="bpm-prem-cta-title">${t('bp.premiumTitle')}</div>
+             <div class="bpm-prem-cta-desc">${t('bp.premiumDesc')}</div>
            </div>
            <button class="bpm-prem-btn" ${canAfford ? '' : 'disabled'}>
-             ${canAfford ? `${BP_PREMIUM_COST}⬢  UNLOCK` : `${BP_PREMIUM_COST}⬢  (yetmaydi)`}
+             ${canAfford ? t('bp.premiumUnlock', { cost: BP_PREMIUM_COST }) : t('bp.premiumNotEnough', { cost: BP_PREMIUM_COST })}
            </button>
          </div>`;
     overlay.innerHTML = `
       <div class="bpm-inner">
         <button class="bpm-close" type="button">✕</button>
-        <div class="bpm-title">★ BATTLE PASS</div>
+        <div class="bpm-title">${t('bp.title')}</div>
         <div class="bpm-summary">
-          <div class="bpm-tier-big">TIER ${p.lvl}</div>
+          <div class="bpm-tier-big">${t('bp.tier', { n: p.lvl, max: BP_TIER_COUNT })}</div>
           <div class="bpm-bar"><div class="bpm-fill" style="width:${(p.pct*100).toFixed(0)}%"></div></div>
           <div class="bpm-xp">${p.xp} XP${p.lvl < BP_TIER_COUNT ? ` / ${p.nextXp}` : ' · MAX'}</div>
         </div>
@@ -7512,8 +8039,8 @@ function openBattlePassModal() {
         <div class="bpm-track-headers ${isPrem ? 'has-prem' : ''}">
           <div></div>
           <div></div>
-          <div class="bpm-track-h free">FREE</div>
-          ${isPrem ? '<div class="bpm-track-h prem">PREMIUM</div>' : ''}
+          <div class="bpm-track-h free">${t('bp.trackFree')}</div>
+          ${isPrem ? `<div class="bpm-track-h prem">${t('bp.trackPrem')}</div>` : ''}
         </div>
         <div class="bpm-tier-list ${isPrem ? 'has-prem' : ''}">
           ${BP_TIERS.map((tier, idx) => {
@@ -7538,7 +8065,7 @@ function openBattlePassModal() {
                   <div class="bpm-t-icon">${f_icon}</div>
                   <div class="bpm-t-label">${tier.label}</div>
                   <button class="bpm-t-btn" ${f_claimable ? '' : 'disabled'}>
-                    ${f_claimed ? '✓' : (f_claimable ? 'CLAIM' : (reached ? '◆' : '🔒'))}
+                    ${f_claimed ? '✓' : (f_claimable ? t('bp.claim') : (reached ? '◆' : '🔒'))}
                   </button>
                 </div>
                 ${isPrem ? `
@@ -7546,7 +8073,7 @@ function openBattlePassModal() {
                     <div class="bpm-t-icon">${p_icon}</div>
                     <div class="bpm-t-label">${ptier.label}</div>
                     <button class="bpm-t-btn" ${p_claimable ? '' : 'disabled'}>
-                      ${p_claimed ? '✓' : (p_claimable ? 'CLAIM' : (reached ? '◆' : '🔒'))}
+                      ${p_claimed ? '✓' : (p_claimable ? t('bp.claim') : (reached ? '◆' : '🔒'))}
                     </button>
                   </div>
                 ` : ''}
@@ -7593,14 +8120,265 @@ function openBattlePassModal() {
   renderBody();
 }
 
+// ---------- FRIENDS UI ----------
+let friendsCache = []; // last fetched list
+let friendsLoading = false;
+const FRIENDS_REFRESH_MS = 60_000;
+let friendsLastFetch = 0;
+
+function getMyFriendCode() {
+  const uid = localStorage.getItem('odyssey.cloudUid') || '';
+  return uid.slice(0, 8).toUpperCase();
+}
+
+async function fetchFriends() {
+  const uid = localStorage.getItem('odyssey.cloudUid');
+  const token = localStorage.getItem('odyssey.cloudToken');
+  if (!uid || !token) return [];
+  try {
+    const r = await fetch(`/api/friends?uid=${encodeURIComponent(uid)}&token=${encodeURIComponent(token)}`);
+    const data = await r.json();
+    if (data.ok && Array.isArray(data.friends)) {
+      friendsCache = data.friends;
+      friendsLastFetch = Date.now();
+      // Sync local profile.friends list with server (in case server is source of truth)
+      profile.friends = data.friends.map(f => ({ uid: f.uid, name: f.name, addedAt: f.addedAt }));
+      saveProfile();
+      return data.friends;
+    }
+  } catch (err) {
+    console.warn('[friends] fetch failed', err);
+  }
+  return friendsCache;
+}
+
+async function addFriendByCode(code) {
+  const uid = localStorage.getItem('odyssey.cloudUid');
+  const token = localStorage.getItem('odyssey.cloudToken');
+  if (!uid || !token) return { ok: false, error: 'no_auth' };
+  if (!/^[a-f0-9]{8}$/i.test(code)) return { ok: false, error: 'bad_code' };
+  try {
+    const r = await fetch('/api/friends/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ uid, token, code: code.toLowerCase() }),
+    });
+    const data = await r.json();
+    if (data.ok && data.friend) {
+      friendsCache.unshift(data.friend);
+      profile.friends = friendsCache.map(f => ({ uid: f.uid, name: f.name, addedAt: f.addedAt }));
+      saveProfile();
+      // Achievements
+      if (typeof unlockAchievement === 'function') {
+        unlockAchievement('first_friend');
+        if (profile.friends.length >= 5) unlockAchievement('social_5');
+      }
+      // Refresh nearby player labels (newly-added might be in AoI)
+      for (const o of otherPlayers.values()) refreshOtherPlayerLabel(o);
+    }
+    return data;
+  } catch (err) {
+    return { ok: false, error: 'network' };
+  }
+}
+
+async function removeFriend(friendUid) {
+  const uid = localStorage.getItem('odyssey.cloudUid');
+  const token = localStorage.getItem('odyssey.cloudToken');
+  if (!uid || !token) return false;
+  try {
+    const r = await fetch('/api/friends/remove', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ uid, token, friendUid }),
+    });
+    const data = await r.json();
+    if (data.ok) {
+      friendsCache = friendsCache.filter(f => f.uid !== friendUid);
+      profile.friends = (profile.friends || []).filter(f => f.uid !== friendUid);
+      saveProfile();
+      return true;
+    }
+  } catch {}
+  return false;
+}
+
+function renderFriendsSplash() {
+  if (!splash) return;
+  let panel = document.getElementById('friends-splash');
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.id = 'friends-splash';
+    splash.appendChild(panel);
+  }
+  const onlineCount = friendsCache.filter(f => f.online).length;
+  const total = friendsCache.length;
+  panel.innerHTML = `
+    <div class="fr-title">
+      <span>${t('friends.title')}</span>
+      <span class="fr-count">${total > 0 ? t('friends.online', { n: onlineCount }) + ` · ${total}` : ''}</span>
+    </div>
+    <div class="fr-mycode">
+      <span class="fr-code-label">${t('friends.code')}:</span>
+      <code class="fr-code-val" title="${t('friends.codeHint')}">${getMyFriendCode() || '—'}</code>
+      <button class="fr-copy-btn" type="button" title="${t('friends.codeHint')}">⧉</button>
+    </div>
+    <button class="fr-open-btn" type="button">${t('friends.addBtn').replace('+ ', '')} / ${total}</button>
+  `;
+  panel.querySelector('.fr-copy-btn').addEventListener('click', async (e) => {
+    e.stopPropagation();
+    const code = getMyFriendCode();
+    if (!code) return;
+    try { await navigator.clipboard.writeText(code); } catch {}
+    const btn = e.currentTarget;
+    const orig = btn.textContent;
+    btn.textContent = '✓';
+    setTimeout(() => { btn.textContent = orig; }, 1500);
+  });
+  panel.querySelector('.fr-open-btn').addEventListener('click', openFriendsModal);
+}
+
+function openFriendsModal() {
+  if (document.getElementById('friends-modal')) return;
+  const ov = document.createElement('div');
+  ov.id = 'friends-modal';
+  const renderBody = () => {
+    const list = friendsCache;
+    const onlineCount = list.filter(f => f.online).length;
+    ov.innerHTML = `
+      <div class="frm-inner">
+        <button class="frm-close" type="button">✕</button>
+        <div class="frm-title">${t('friends.title')}</div>
+        <div class="frm-mycode-row">
+          <span>${t('friends.yourCode', { code: getMyFriendCode() || '—' })}</span>
+          <button class="frm-copy" type="button">⧉</button>
+        </div>
+        <div class="frm-hint">${t('friends.codeHint')}</div>
+        <div class="frm-add-row">
+          <input type="text" class="frm-add-input" maxlength="8" placeholder="${t('friends.addPlaceholder')}" />
+          <button class="frm-add-btn" type="button">${t('friends.addBtn')}</button>
+        </div>
+        <div class="frm-add-msg"></div>
+        <div class="frm-online-tag">${onlineCount > 0 ? t('friends.online', { n: onlineCount }) : ''}</div>
+        <div class="frm-list">
+          ${list.length === 0
+            ? `<div class="frm-empty">${t('friends.empty')}</div>`
+            : list.map(f => `
+                <div class="frm-row ${f.online ? 'online' : ''}" data-uid="${f.uid}">
+                  <div class="frm-status"></div>
+                  <div class="frm-info">
+                    <div class="frm-name">${escapeHtml(f.name || 'Pilot')}</div>
+                    <div class="frm-sub">
+                      ${f.faction ? `<span class="frm-fac fac-${f.faction.toLowerCase()}">${f.faction}</span>` : ''}
+                      <code class="frm-fcode">${f.code}</code>
+                    </div>
+                  </div>
+                  <button class="frm-rm" data-uid="${f.uid}" title="${t('friends.remove')}">✕</button>
+                </div>
+              `).join('')
+          }
+        </div>
+      </div>
+    `;
+    ov.querySelector('.frm-close').addEventListener('click', () => ov.remove());
+    ov.addEventListener('click', (e) => { if (e.target === ov) ov.remove(); });
+    ov.querySelector('.frm-copy').addEventListener('click', async (e) => {
+      const code = getMyFriendCode();
+      if (!code) return;
+      try { await navigator.clipboard.writeText(code); } catch {}
+      const btn = e.currentTarget;
+      const orig = btn.textContent;
+      btn.textContent = '✓';
+      setTimeout(() => { btn.textContent = orig; }, 1500);
+    });
+    const input = ov.querySelector('.frm-add-input');
+    const msg = ov.querySelector('.frm-add-msg');
+    const addBtn = ov.querySelector('.frm-add-btn');
+    const submitAdd = async () => {
+      const code = (input.value || '').trim();
+      if (!/^[a-f0-9]{8}$/i.test(code)) {
+        msg.textContent = t('friends.errBadCode');
+        msg.className = 'frm-add-msg err';
+        return;
+      }
+      addBtn.disabled = true;
+      msg.textContent = '...';
+      msg.className = 'frm-add-msg';
+      const result = await addFriendByCode(code);
+      addBtn.disabled = false;
+      if (result.ok) {
+        msg.textContent = t('friends.added', { name: result.friend.name });
+        msg.className = 'frm-add-msg ok';
+        input.value = '';
+        renderBody();
+        renderFriendsSplash();
+      } else {
+        const err = result.error;
+        let errText;
+        if (err === 'self')                errText = t('friends.errSelf');
+        else if (err === 'already_friend') errText = t('friends.errExists');
+        else if (err === 'not_found')      errText = t('friends.errNotFound');
+        else if (err === 'bad_code')       errText = t('friends.errBadCode');
+        else if (err === 'rate_limit')     errText = t('friends.errRateLimit');
+        else if (err === 'limit_reached')  errText = t('friends.errLimitMax', { n: 200 });
+        else                               errText = t('friends.errGeneric');
+        msg.textContent = errText;
+        msg.className = 'frm-add-msg err';
+      }
+    };
+    addBtn.addEventListener('click', submitAdd);
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') submitAdd();
+    });
+    ov.querySelectorAll('.frm-rm').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const friendUid = btn.dataset.uid;
+        const friend = friendsCache.find(f => f.uid === friendUid);
+        if (!friend) return;
+        if (!confirm(t('friends.confirmRemove', { name: friend.name }))) return;
+        const ok = await removeFriend(friendUid);
+        if (ok) {
+          renderBody();
+          renderFriendsSplash();
+        }
+      });
+    });
+  };
+  document.body.appendChild(ov);
+  renderBody();
+  // Refresh from server for fresh online status
+  fetchFriends().then(() => renderBody());
+}
+
 // Render daily challenges + global leaderboard on splash at startup
 renderDailySplash();
 renderLeaderboardSplash();
+const _bpSeasonReset = checkBpSeasonReset();
 renderBattlePassSplash();
-// Daily login bonus (delayed slightly so splash renders first)
+renderFriendsSplash();
+// Refresh friends list shortly after boot (for online statuses)
 setTimeout(() => {
-  const reward = checkDailyLoginBonus();
-  if (reward) showLoginBonusModal(reward);
+  fetchFriends().then(() => {
+    renderFriendsSplash();
+    // Re-render leaderboard so friends tab can populate
+    if (typeof renderLeaderboardSplash === 'function') renderLeaderboardSplash();
+  }).catch(() => {});
+}, 1500);
+// Periodic refresh while on splash
+setInterval(() => {
+  if (splash && splash.style.display !== 'none' && Date.now() - friendsLastFetch > FRIENDS_REFRESH_MS) {
+    fetchFriends().then(() => renderFriendsSplash()).catch(() => {});
+  }
+}, FRIENDS_REFRESH_MS);
+// Daily login bonus + season reset notice (delayed slightly so splash renders first)
+setTimeout(() => {
+  if (_bpSeasonReset) {
+    showSeasonResetModal();
+  } else {
+    const reward = checkDailyLoginBonus();
+    if (reward) showLoginBonusModal(reward);
+  }
 }, 600);
 
 // Stats + Shop buttons on splash

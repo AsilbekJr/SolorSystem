@@ -150,14 +150,44 @@ function addLeaderboardEntry(entry) {
 }
 loadLeaderboard();
 
-// ---- Cloud Profile Sync (per-UID JSON storage) ----
+// ---- Cloud Profile Sync (friends, online presence, BP) ----
+// Server-side BP XP tracking for anti-cheat: client sends incremental XP, server validates & stores
 const PROFILES_FILE = path.join(__dirname, 'profiles.json');
 const PROFILE_MAX_BYTES = 16 * 1024; // 16KB per profile (plenty for stats)
 const PROFILE_PUT_COOLDOWN_MS = 4_000; // per-UID
 const PROFILES_MAX = 50_000; // hard cap to prevent disk bloat
 const profilePutTs = new Map(); // uid -> last put ts
-let profiles = {}; // { uid: {token, profile, updatedAt} }
+let profiles = {}; // { uid: {token, profile, updatedAt, bpXp} }
 let profilesDirty = false;
+const onlineUidSet = new Set(); // UIDs currently connected via WS (refcounted)
+const onlineUidRefs = new Map(); // uid -> ref count (multiple tabs)
+
+// Friends API rate limits
+const FRIENDS_ADD_WINDOW_MS = 60_000;  // 1 minute window
+const FRIENDS_ADD_MAX = 6;             // max add attempts per UID per window
+const FRIENDS_LIST_COOLDOWN_MS = 2_000; // min interval between list fetches per UID
+const FRIENDS_MAX_PER_USER = 200;      // hard cap to prevent runaway lists
+const friendsAddBuckets = new Map();    // uid -> { ts:[], }
+const friendsListTs = new Map();        // uid -> last list ts
+function friendsCanAdd(uid) {
+  const now = Date.now();
+  const bucket = friendsAddBuckets.get(uid) || [];
+  const fresh = bucket.filter(ts => now - ts < FRIENDS_ADD_WINDOW_MS);
+  if (fresh.length >= FRIENDS_ADD_MAX) {
+    friendsAddBuckets.set(uid, fresh);
+    return false;
+  }
+  fresh.push(now);
+  friendsAddBuckets.set(uid, fresh);
+  return true;
+}
+function friendsCanList(uid) {
+  const now = Date.now();
+  const last = friendsListTs.get(uid) || 0;
+  if (now - last < FRIENDS_LIST_COOLDOWN_MS) return false;
+  friendsListTs.set(uid, now);
+  return true;
+}
 
 function loadProfiles() {
   try {
@@ -465,6 +495,200 @@ const server = http.createServer((req, res) => {
     return res.end();
   }
 
+  // ---- Friends: list (auth via uid+token) ----
+  if (url === '/api/friends' && req.method === 'GET') {
+    const params = new URL(req.url, `http://${req.headers.host}`).searchParams;
+    const uid = params.get('uid');
+    const token = params.get('token');
+    if (!isValidUid(uid) || !isValidToken(token)) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      return res.end('{"ok":false,"error":"bad_params"}');
+    }
+    const entry = profiles[uid];
+    if (!entry || entry.token !== token) {
+      res.writeHead(403, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      return res.end('{"ok":false,"error":"unauthorized"}');
+    }
+    if (!friendsCanList(uid)) {
+      res.writeHead(429, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      return res.end('{"ok":false,"error":"rate_limit"}');
+    }
+    const friendsArr = Array.isArray(entry.profile?.friends) ? entry.profile.friends : [];
+    const list = friendsArr.map(f => {
+      const fp = profiles[f.uid];
+      const name = fp?.profile?.name || f.name || 'Unknown';
+      const faction = fp?.profile?.faction || null;
+      const online = !!onlineUidSet.has(f.uid);
+      const code = (f.uid || '').slice(0, 8).toUpperCase();
+      return { uid: f.uid, name, faction, online, code, addedAt: f.addedAt };
+    });
+    res.writeHead(200, {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Cache-Control': 'no-store',
+    });
+    return res.end(JSON.stringify({ ok: true, friends: list }));
+  }
+  // ---- Friends: add by friend code (8-char hex prefix of UID) ----
+  if (url === '/api/friends/add' && req.method === 'POST') {
+    let body = ''; let bytes = 0;
+    req.on('data', (c) => { bytes += c.length; if (bytes > 1024) req.destroy(); else body += c; });
+    req.on('end', () => {
+      let payload; try { payload = JSON.parse(body); } catch {
+        res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        return res.end('{"ok":false,"error":"bad_json"}');
+      }
+      const { uid, token, code } = payload || {};
+      if (!isValidUid(uid) || !isValidToken(token) || typeof code !== 'string' || !/^[a-f0-9]{8}$/i.test(code)) {
+        res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        return res.end('{"ok":false,"error":"bad_params"}');
+      }
+      const entry = profiles[uid];
+      if (!entry || entry.token !== token) {
+        res.writeHead(403, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        return res.end('{"ok":false,"error":"unauthorized"}');
+      }
+      if (!friendsCanAdd(uid)) {
+        res.writeHead(429, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        return res.end('{"ok":false,"error":"rate_limit"}');
+      }
+      // Hard cap on friend list size
+      const existingCount = Array.isArray(entry.profile?.friends) ? entry.profile.friends.length : 0;
+      if (existingCount >= FRIENDS_MAX_PER_USER) {
+        res.writeHead(409, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        return res.end('{"ok":false,"error":"limit_reached"}');
+      }
+      const codeLower = code.toLowerCase();
+      if (codeLower === uid.slice(0, 8).toLowerCase()) {
+        res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        return res.end('{"ok":false,"error":"self"}');
+      }
+      // Find UID matching this 8-char prefix
+      let foundUid = null;
+      for (const k of Object.keys(profiles)) {
+        if (k.toLowerCase().startsWith(codeLower)) { foundUid = k; break; }
+      }
+      if (!foundUid) {
+        res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        return res.end('{"ok":false,"error":"not_found"}');
+      }
+      // Add to your profile.friends
+      if (!Array.isArray(entry.profile.friends)) entry.profile.friends = [];
+      if (entry.profile.friends.find(f => f.uid === foundUid)) {
+        res.writeHead(409, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        return res.end('{"ok":false,"error":"already_friend"}');
+      }
+      const fp = profiles[foundUid];
+      const friendName = fp?.profile?.name || 'Unknown';
+      entry.profile.friends.push({ uid: foundUid, name: friendName, addedAt: Date.now() });
+      entry.updatedAt = Date.now();
+      profilesDirty = true;
+      res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      return res.end(JSON.stringify({
+        ok: true,
+        friend: {
+          uid: foundUid,
+          name: friendName,
+          faction: fp?.profile?.faction || null,
+          online: !!onlineUidSet.has(foundUid),
+          code: foundUid.slice(0, 8).toUpperCase(),
+        },
+      }));
+    });
+    return;
+  }
+  // ---- Friends: remove ----
+  if (url === '/api/friends/remove' && req.method === 'POST') {
+    let body = ''; let bytes = 0;
+    req.on('data', (c) => { bytes += c.length; if (bytes > 1024) req.destroy(); else body += c; });
+    req.on('end', () => {
+      let payload; try { payload = JSON.parse(body); } catch {
+        res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        return res.end('{"ok":false,"error":"bad_json"}');
+      }
+      const { uid, token, friendUid } = payload || {};
+      if (!isValidUid(uid) || !isValidToken(token) || !isValidUid(friendUid)) {
+        res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        return res.end('{"ok":false,"error":"bad_params"}');
+      }
+      const entry = profiles[uid];
+      if (!entry || entry.token !== token) {
+        res.writeHead(403, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        return res.end('{"ok":false,"error":"unauthorized"}');
+      }
+      if (!Array.isArray(entry.profile.friends)) entry.profile.friends = [];
+      const before = entry.profile.friends.length;
+      entry.profile.friends = entry.profile.friends.filter(f => f.uid !== friendUid);
+      if (entry.profile.friends.length !== before) {
+        entry.updatedAt = Date.now();
+        profilesDirty = true;
+      }
+      res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      return res.end(JSON.stringify({ ok: true }));
+    });
+    return;
+  }
+  if ((url === '/api/friends' || url === '/api/friends/add' || url === '/api/friends/remove') && req.method === 'OPTIONS') {
+    res.writeHead(204, {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    });
+    return res.end();
+  }
+  // ---- BP XP (server-side anti-cheat) ----
+  if (url === '/api/bp-xp' && req.method === 'GET') {
+    const params = new URL(req.url, `http://${req.headers.host}`).searchParams;
+    const uid = params.get('uid');
+    const token = params.get('token');
+    if (!isValidUid(uid) || !isValidToken(token)) {
+      res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      return res.end('{"ok":false,"error":"bad_request"}');
+    }
+    const entry = profiles[uid];
+    if (!entry || entry.token !== token) {
+      res.writeHead(403, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+      return res.end('{"ok":false,"error":"bad_token"}');
+    }
+    return res.end(JSON.stringify({ ok: true, bpXp: entry.bpXp || 0, updatedAt: entry.updatedAt }));
+  }
+  if (url === '/api/bp-xp' && req.method === 'PUT') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const data = JSON.parse(body);
+        const { uid, token, bpXp } = data;
+        if (!isValidUid(uid) || !isValidToken(token) || typeof bpXp !== 'number' || bpXp < 0) {
+          res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+          return res.end('{"ok":false,"error":"bad_request"}');
+        }
+        const entry = profiles[uid];
+        if (!entry || entry.token !== token) {
+          res.writeHead(403, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+          return res.end('{"ok":false,"error":"bad_token"}');
+        }
+        // Anti-cheat: only allow incremental increases (no decreases, no huge jumps)
+        const current = entry.bpXp || 0;
+        const delta = bpXp - current;
+        if (delta < 0 || delta > 500) {
+          res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+          return res.end('{"ok":false,"error":"invalid_delta"}');
+        }
+        entry.bpXp = bpXp;
+        entry.updatedAt = new Date().toISOString();
+        profilesDirty = true;
+        saveProfilesLazy();
+        res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        return res.end(JSON.stringify({ ok: true, bpXp: entry.bpXp, updatedAt: entry.updatedAt }));
+      } catch {
+        res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        return res.end('{"ok":false,"error":"bad_json"}');
+      }
+    });
+    return;
+  }
+
   // CORS preflight
   if (url === '/api/profile' && req.method === 'OPTIONS') {
     res.writeHead(204, {
@@ -592,7 +816,8 @@ wss.on('connection', (ws) => {
   const initList = [];
   for (const op of players.values()) {
     if (op.id === me.id) continue;
-    initList.push({ id: op.id, ...op.state });
+    const code = op.uid ? op.uid.slice(0, 8).toUpperCase() : null;
+    initList.push({ id: op.id, ...op.state, code });
   }
   me.send({
     type: 'init',
@@ -606,7 +831,8 @@ wss.on('connection', (ws) => {
   for (const op of players.values()) {
     if (op.id === me.id) continue;
     if (dist2(op.state, me.state) > AOI_RADIUS_SQ) continue;
-    op.send({ type: 'join', id: me.id, ...me.state });
+    const myCode = me.uid ? me.uid.slice(0, 8).toUpperCase() : null;
+    op.send({ type: 'join', id: me.id, ...me.state, code: myCode });
   }
 
   ws.on('message', (raw) => {
@@ -616,6 +842,39 @@ wss.on('connection', (ws) => {
     if (!msg || typeof msg !== 'object') return;
 
     const t = msg.type;
+    if (t === 'hello') {
+      // Client identifies its persistent UID (for online presence tracking)
+      const uid = msg.uid;
+      if (typeof uid === 'string' && /^[a-f0-9]{16,64}$/i.test(uid) && !me.uid) {
+        me.uid = uid;
+        const isFirstSession = !onlineUidSet.has(uid); // multi-tab: only notify on real first connect
+        const refs = (onlineUidRefs.get(uid) || 0) + 1;
+        onlineUidRefs.set(uid, refs);
+        onlineUidSet.add(uid);
+        // Broadcast code update to nearby players so they can detect friends
+        const code = uid.slice(0, 8).toUpperCase();
+        const out = JSON.stringify({ type: 'code-update', id: me.id, code });
+        for (const op of players.values()) {
+          if (op.id === me.id) continue;
+          if (op.ws.readyState !== 1) continue;
+          if (dist2(op.state, me.state) > AOI_RADIUS_SQ) continue;
+          op.send(out);
+        }
+        // Notify any connected players who have this UID in their friends list
+        if (isFirstSession) {
+          const meName = profiles[uid]?.profile?.name || me.state.name || 'Pilot';
+          for (const op of players.values()) {
+            if (op.id === me.id || !op.uid) continue;
+            const friends = profiles[op.uid]?.profile?.friends;
+            if (!Array.isArray(friends)) continue;
+            if (friends.some(f => f.uid === uid)) {
+              op.send({ type: 'friend-online', uid, name: meName, code });
+            }
+          }
+        }
+      }
+      return;
+    }
     if (t === 'state') {
       if (!me.rateOk(me.stateTs, MAX_STATE_HZ)) return;
       // Validate numbers
@@ -656,6 +915,39 @@ wss.on('connection', (ws) => {
       // Chat is global (small payloads, rare)
       const out = JSON.stringify({ type: 'chat', id: me.id, name: me.state.name, text });
       for (const op of players.values()) op.send(out);
+    } else if (t === 'bp-xp-add') {
+      // Client sends incremental BP XP for server-side validation
+      if (!me.uid) return;
+      const delta = Number(msg.delta);
+      if (!Number.isFinite(delta) || delta <= 0 || delta > 500) return; // sanity: positive, reasonable max
+      const entry = profiles[me.uid];
+      if (!entry) return;
+      entry.bpXp = (entry.bpXp || 0) + delta;
+      entry.updatedAt = new Date().toISOString();
+      profilesDirty = true;
+      saveProfilesLazy();
+    } else if (t === 'friend-ping') {
+      // Send a ping signal to all your online friends (regardless of distance)
+      if (!me.uid) return;
+      if (!me.rateOk(me.chatTs, MAX_CHAT_HZ)) return; // share chat bucket (rate-limited)
+      // Find players who have ME in their friends list
+      const meName = profiles[me.uid]?.profile?.name || me.state.name || 'Pilot';
+      const code = me.uid.slice(0, 8).toUpperCase();
+      const x = +me.state.x, y = +me.state.y, z = +me.state.z;
+      if (![x, y, z].every(Number.isFinite)) return;
+      const out = JSON.stringify({
+        type: 'friend-ping',
+        fromUid: me.uid,
+        fromName: meName,
+        fromCode: code,
+        x, y, z,
+      });
+      for (const op of players.values()) {
+        if (op.id === me.id || !op.uid) continue;
+        const friends = profiles[op.uid]?.profile?.friends;
+        if (!Array.isArray(friends)) continue;
+        if (friends.some(f => f.uid === me.uid)) op.send(out);
+      }
     } else if (t === 'emote') {
       const emoteId = Number(msg.emote);
       if (!Number.isFinite(emoteId) || emoteId < 0 || emoteId > 15) return;
@@ -686,6 +978,7 @@ wss.on('connection', (ws) => {
         from: me.id,
         fromName: me.state.name,
         fromFaction: me.state.faction,
+        fromCode: me.uid ? me.uid.slice(0, 8).toUpperCase() : null,
         dmg,
         weapon,
       });
@@ -728,6 +1021,26 @@ wss.on('connection', (ws) => {
   ws.on('close', () => {
     players.delete(me.id);
     totalDisconnects++;
+    if (me.uid) {
+      const refs = (onlineUidRefs.get(me.uid) || 1) - 1;
+      if (refs <= 0) {
+        onlineUidRefs.delete(me.uid);
+        onlineUidSet.delete(me.uid);
+        // Notify friends about offline status (only on full disconnect, not tab close with another tab open)
+        const meName = profiles[me.uid]?.profile?.name || me.state.name || 'Pilot';
+        const code = me.uid.slice(0, 8).toUpperCase();
+        for (const op of players.values()) {
+          if (op.id === me.id || !op.uid) continue;
+          const friends = profiles[op.uid]?.profile?.friends;
+          if (!Array.isArray(friends)) continue;
+          if (friends.some(f => f.uid === me.uid)) {
+            op.send({ type: 'friend-offline', uid: me.uid, name: meName, code });
+          }
+        }
+      } else {
+        onlineUidRefs.set(me.uid, refs);
+      }
+    }
     // Notify nearby of leave (also fall-back to all — it's tiny)
     const out = JSON.stringify({ type: 'leave', id: me.id });
     for (const op of players.values()) op.send(out);
