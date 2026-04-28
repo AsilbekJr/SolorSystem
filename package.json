@@ -1,0 +1,16 @@
+{
+  "name": "odyssey-sols-last-breath",
+  "version": "0.1.0",
+  "description": "Odyssey: Sol's Last Breath — browser MMO space exploration (MVP)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
