@@ -1,0 +1,42 @@
+:root {
+  --color-bg-deep: #020611;
+  --color-bg-space: #000000;
+  --color-hud-cyan: #7cd4ff;
+  --color-hud-text: #b8e8ff;
+  --color-hud-bright: #cfeaff;
+  --color-success: #7cffb1;
+  --color-warning-gold: #ffd060;
+  --color-warning-bright: #ffe08a;
+  --color-danger: #ff4444;
+  --color-danger-soft: #ff8888;
+  --color-bp: #d8a8ff;
+  --color-aida: #ff9a3c;
+  --color-genesis: #ffe14f;
+  --faction-ascendant: #7cffb1;
+  --faction-nihilist: #ff66cc;
+  --hud-glass: rgba(2, 12, 24, 0.55);
+  --hud-glass-strong: rgba(10, 25, 40, 0.92);
+  --hud-border: rgba(120, 220, 255, 0.25);
+  --hud-border-strong: rgba(120, 220, 255, 0.5);
+  --hud-blur: 8px;
+  --hud-shadow: 0 0 20px rgba(80, 200, 255, 0.25);
+  --font-display: "Orbitron", "Segoe UI", sans-serif;
+  --font-data: "JetBrains Mono", "Consolas", "Courier New", monospace;
+  --ui-scale: 1;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --accent: var(--color-hud-cyan);
+}
+
+html, body {
+  font-family: var(--font-data);
+  color: var(--color-hud-text);
+  background: var(--color-bg-space);
+}
+
+h1, h2, .font-display, #splash h1, #boot-loader .boot-title,
+.stats-modal .title, .ach-toast .name, #victory h1 {
+  font-family: var(--font-display);
+}

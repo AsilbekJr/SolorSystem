@@ -5,6 +5,12 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import {
+  initSplashUI, updateMenuCamera, onSplashHidden, setBootProgress, updateOnlineCounter, mountSplashActionButtons,
+  initHudUI, updateHudEnhancements, applyUiScale, readUiScale,
+  initFeedbackUI, showModuleAcquired, animateVictoryScreen, animateDeathOverlay, triggerHvtFeedback,
+  initInstallPrompt, playMenuMusic, stopMenuMusic, playPickupSound, playHeartbeat, updateHowlerVolumes,
+} from './src/ui/index.js';
 
 // ---------- I18N (Internationalization) ----------
 const I18N = {
@@ -20,6 +26,39 @@ const I18N = {
     'splash.daily':           "◆ TODAY'S CHALLENGES",
     'splash.leaderboard':     '★ GLOBAL LEADERBOARD',
     'splash.leaderboardEmpty': "Hali g'olib yo'q. Birinchi bo'ling!",
+    'splash.drama':           "⚠ YER YADROSI: 47 KUN QOLDI",
+    'splash.tabMission':      'MISSIYA',
+    'splash.tabHangar':       'HANGAR',
+    'splash.tabSocial':       'IJTIMOIY',
+    'splash.online':          '● {n} PILOT ONLAYN',
+    'splash.install':         '⬇ O\'RNATISH',
+    'splash.transfer':        '☁ TRANSFER',
+    'trade.footer':           "25% sizdan kamayadi · qabul qilsa o'tadi",
+    'victory.body1':          '{name}, siz <b>Genesis zarrasini</b> Yerga olib qaytdingiz.',
+    'victory.body2':          "Insoniyat omon qoldi. Sizning oltin yodgorligingiz Yer orbitasida o'rnatildi.",
+    'victory.karma':          'KARMA',
+    'victory.kills':          "QAROQCHI YO'Q QILINDI",
+    'victory.modules':        "YIG'ILGAN MODULLAR",
+    'victory.probes':         'ZONDLAR TOPILDI',
+    'death.modules':          'Modullar: {mods} · Karma: {karma}',
+    'module.acquired':        'MODUL OLINDI',
+    'boot.three':             'Three.js yuklanmoqda...',
+    'boot.scene':             'Sektor ma\'lumotlari yuklanmoqda...',
+    'boot.connect':           'AIDA tarmog\'iga ulanmoqda...',
+    'boot.ready':             'Tayyor — kirish ruxsati berildi',
+    'pause.title':            '⏸ PAUSED',
+    'pause.fov':              'FIELD OF VIEW',
+    'pause.sensitivity':      'MOUSE SENSITIVITY',
+    'pause.touchSens':        'TOUCH SENSITIVITY',
+    'pause.uiScale':          'UI SCALE',
+    'pause.graphics':         'GRAPHICS PRESET',
+    'pause.bloom':            'BLOOM POSTPROCESS',
+    'pause.resume':           '▶ RESUME',
+    'pause.tutorial':         '? TUTORIAL',
+    'pause.hint':             'Press [P] yoki [Esc] yopish · sozlamalar avtomatik saqlanadi',
+    'graphics.low':           'LOW',
+    'graphics.medium':        'MEDIUM',
+    'graphics.ultra':         'ULTRA',
     'faction.choose':         'FRAKSIYA TANLANG',
     'faction.intro':          'Sizning ishonchingiz galaxyani shakllantiradi.',
     'faction.confirm':        'TASDIQLASH',
@@ -104,6 +143,39 @@ const I18N = {
     'splash.daily':           "◆ TODAY'S CHALLENGES",
     'splash.leaderboard':     '★ GLOBAL LEADERBOARD',
     'splash.leaderboardEmpty': 'No champions yet. Be the first!',
+    'splash.drama':           '⚠ EARTH CORE: 47 DAYS REMAINING',
+    'splash.tabMission':      'MISSION',
+    'splash.tabHangar':       'HANGAR',
+    'splash.tabSocial':       'SOCIAL',
+    'splash.online':          '● {n} PILOTS ONLINE',
+    'splash.install':         '⬇ INSTALL APP',
+    'splash.transfer':        '☁ TRANSFER',
+    'trade.footer':           '25% deducted from you · succeeds if accepted',
+    'victory.body1':          '{name}, you returned the <b>Genesis Particle</b> to Earth.',
+    'victory.body2':          'Humanity survives. Your golden monument orbits Earth.',
+    'victory.karma':          'KARMA',
+    'victory.kills':          'PIRATES ELIMINATED',
+    'victory.modules':        'MODULES COLLECTED',
+    'victory.probes':         'PROBES FOUND',
+    'death.modules':          'Modules: {mods} · Karma: {karma}',
+    'module.acquired':        'MODULE ACQUIRED',
+    'boot.three':             'Loading Three.js...',
+    'boot.scene':             'Loading sector data...',
+    'boot.connect':           'Connecting to AIDA network...',
+    'boot.ready':             'Ready — clearance granted',
+    'pause.title':            '⏸ PAUSED',
+    'pause.fov':              'FIELD OF VIEW',
+    'pause.sensitivity':      'MOUSE SENSITIVITY',
+    'pause.touchSens':        'TOUCH SENSITIVITY',
+    'pause.uiScale':          'UI SCALE',
+    'pause.graphics':         'GRAPHICS PRESET',
+    'pause.bloom':            'BLOOM POSTPROCESS',
+    'pause.resume':           '▶ RESUME',
+    'pause.tutorial':         '? TUTORIAL',
+    'pause.hint':             'Press [P] or [Esc] to close · settings auto-save',
+    'graphics.low':           'LOW',
+    'graphics.medium':        'MEDIUM',
+    'graphics.ultra':         'ULTRA',
     'faction.choose':         'CHOOSE YOUR FACTION',
     'faction.intro':          'Your beliefs will shape the galaxy.',
     'faction.confirm':        'CONFIRM',
@@ -188,6 +260,39 @@ const I18N = {
     'splash.daily':           "◆ ЕЖЕДНЕВНЫЕ ИСПЫТАНИЯ",
     'splash.leaderboard':     '★ ТАБЛИЦА ЛИДЕРОВ',
     'splash.leaderboardEmpty': 'Пока нет чемпионов. Будь первым!',
+    'splash.drama':           '⚠ ЯДРО ЗЕМЛИ: ОСТАЛОСЬ 47 ДНЕЙ',
+    'splash.tabMission':      'МИССИЯ',
+    'splash.tabHangar':       'АНГАР',
+    'splash.tabSocial':       'СОЦИАЛЬНОЕ',
+    'splash.online':          '● {n} ПИЛОТОВ ОНЛАЙН',
+    'splash.install':         '⬇ УСТАНОВИТЬ',
+    'splash.transfer':        '☁ ПЕРЕНОС',
+    'trade.footer':           '25% списывается с вас · проходит при принятии',
+    'victory.body1':          '{name}, вы вернули <b>Частицу Генезиса</b> на Землю.',
+    'victory.body2':          'Человечество спасено. Ваш золотой монумент на орбите Земли.',
+    'victory.karma':          'КАРМА',
+    'victory.kills':          'УНИЧТОЖЕНО ПИРАТОВ',
+    'victory.modules':        'СОБРАНО МОДУЛЕЙ',
+    'victory.probes':         'НАЙДЕНО ЗОНДОВ',
+    'death.modules':          'Модули: {mods} · Карма: {karma}',
+    'module.acquired':        'МОДУЛЬ ПОЛУЧЕН',
+    'boot.three':             'Загрузка Three.js...',
+    'boot.scene':             'Загрузка данных секторов...',
+    'boot.connect':           'Подключение к сети AIDA...',
+    'boot.ready':             'Готово — доступ разрешён',
+    'pause.title':            '⏸ ПАУЗА',
+    'pause.fov':              'ПОЛЕ ЗРЕНИЯ',
+    'pause.sensitivity':      'ЧУВСТВИТЕЛЬНОСТЬ МЫШИ',
+    'pause.touchSens':        'ЧУВСТВ. КАСАНИЯ',
+    'pause.uiScale':          'МАСШТАБ UI',
+    'pause.graphics':         'ГРАФИКА',
+    'pause.bloom':            'BLOOM',
+    'pause.resume':           '▶ ПРОДОЛЖИТЬ',
+    'pause.tutorial':         '? ОБУЧЕНИЕ',
+    'pause.hint':             'Нажмите [P] или [Esc] · настройки сохраняются',
+    'graphics.low':           'НИЗК.',
+    'graphics.medium':        'СРЕД.',
+    'graphics.ultra':         'УЛЬТРА',
     'faction.choose':         'ВЫБЕРИТЕ ФРАКЦИЮ',
     'faction.intro':          'Ваши убеждения изменят галактику.',
     'faction.confirm':        'ПОДТВЕРДИТЬ',
@@ -333,13 +438,16 @@ const _bootLoader = document.getElementById('boot-loader');
 function setBootStatus(text) {
   if (_bootStatus) _bootStatus.textContent = text;
 }
+function bootStage(pct, key) {
+  setBootProgress(pct, t(key));
+}
 function hideBootLoader() {
   if (_bootLoader && !_bootLoader.classList.contains('hidden')) {
     _bootLoader.classList.add('hidden');
     setTimeout(() => { if (_bootLoader) _bootLoader.remove(); }, 700);
   }
 }
-setBootStatus('Loading Three.js...');
+bootStage(15, 'boot.three');
 
 // ---------- PERFORMANCE MONITOR (stats.js — toggle with backtick `) ----------
 let perfStats = null;
@@ -689,16 +797,16 @@ function setEngineLevel(thrustOn, boost) {
 // ---------- Three.js ----------
 const renderer = new THREE.WebGLRenderer({
   canvas: $('scene'),
-  antialias: true,
+  antialias: window.devicePixelRatio <= 1.5,
   powerPreference: 'high-performance',
 });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.35));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.05;
 
-setBootStatus('Building scene...');
+bootStage(45, 'boot.scene');
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x02030a);
 scene.fog = null;
@@ -784,10 +892,18 @@ function makeStarSpriteTexture() {
   g.fillRect(0, 0, 64, 64);
   return new THREE.CanvasTexture(c);
 }
-// Far background stars (dense, dim)
-scene.add(makeStarLayer(7000, 80000, 100000, 40, 80, true));
-// Mid layer (sparse, brighter, colored)
-scene.add(makeStarLayer(900, 30000, 60000, 80, 180, true));
+// Far background stars (dense, dim) — reduced for performance
+const perfVisuals = { nebulae: [], galaxy: null, starLayers: [], cosmicDust: null };
+let useComposerRender = true;
+
+const starLayers = [
+  makeStarLayer(2800, 80000, 100000, 40, 80, true),
+  makeStarLayer(350, 30000, 60000, 80, 180, true),
+];
+for (const sl of starLayers) {
+  scene.add(sl);
+  perfVisuals.starLayers.push(sl);
+}
 
 // ---------- LENS FLARE (DOM-based, sun-driven) ----------
 const lensFlareLayer = document.createElement('div');
@@ -821,10 +937,10 @@ const _flareScreen = new THREE.Vector3();
 const _flareDir = new THREE.Vector3();
 const _flareTmp1 = new THREE.Vector3();
 const _flareTmp2 = new THREE.Vector3();
-let lensFlareEnabled = true;
+let lensFlareEnabledFlag = true;
 
 function updateLensFlare() {
-  if (!lensFlareEnabled) {
+  if (!lensFlareEnabledFlag) {
     lensFlareLayer.style.opacity = '0';
     return;
   }
@@ -929,6 +1045,7 @@ const cosmicDust = (() => {
   return new THREE.Points(geo, mat);
 })();
 scene.add(cosmicDust);
+perfVisuals.cosmicDust = cosmicDust;
 function updateCosmicDust(dt) {
   cosmicDust.position.copy(state.pos);
   cosmicDust.rotation.y += dt * 0.012;
@@ -1018,15 +1135,11 @@ function makeRichNebula(color, cx, cy, cz, baseSize) {
   }
 }
 makeRichNebula(0x7a44cc, -40000, 8000, 30000, 35000);  // Purple
-makeRichNebula(0xcc4488, 50000, -5000, -25000, 30000); // Magenta
 makeRichNebula(0x4488dd, 10000, -10000, 50000, 40000); // Blue
-makeRichNebula(0x33cc88, -25000, 15000, -45000, 28000);// Teal
-makeRichNebula(0xff8844, 35000, 12000, 45000, 26000);  // Orange
-makeRichNebula(0x9966dd, -45000, -12000, -38000, 32000); // Lavender
 
 // ---------- Galactic Spiral Disc (background) ----------
 (function makeGalaxyDisc() {
-  const N = 4000;
+  const N = 1200;
   const positions = new Float32Array(N * 3);
   const colors = new Float32Array(N * 3);
   const center = new THREE.Vector3(-55000, -8000, 35000);
@@ -1365,14 +1478,23 @@ const planetTextures = {
 // Compressed scale for playability
 // orbitAngle = current angular position around the Sun (radians).
 // Planets are placed at polar coords: world = (R*cos(θ), 0, R*sin(θ))
+// Scale: 1 AU ≈ 2000 u. Radii compressed but recognizable (Jupiter ~11× Earth).
+const PLANET_DETAIL = 32;
 const PLANETS = [
-  { key: 'sun',     name: 'SUN',     x: 0,      r: 220, orbitAngle: 0,    color: 0xffcc66, emissive: 0xffaa33, isStar: true },
-  { key: 'earth',   name: 'EARTH',   x: 2000,   r: 36,  orbitAngle: 0.0,  color: 0x3a78d8, atmoColor: 0x6ab0ff, atmoStrength: 1.4, atmoPower: 2.2, hasGate: true,  module: 'BIO-SEED' },
-  { key: 'mars',    name: 'MARS',    x: 3200,   r: 26,  orbitAngle: 0.85, color: 0xc1542a, atmoColor: 0xffaa66, atmoStrength: 0.5, atmoPower: 3.0, hasGate: true,  module: 'OXIDIZER' },
-  { key: 'jupiter', name: 'JUPITER', x: 5800,   r: 130, orbitAngle: 2.10, color: 0xd9a87a, atmoColor: 0xffd9a0, atmoStrength: 0.8, atmoPower: 2.8, hasGate: true,  module: 'GRAV-COMPRESSOR' },
-  { key: 'saturn',  name: 'SATURN',  x: 8200,   r: 110, orbitAngle: 3.50, color: 0xe6c98a, atmoColor: 0xffe2a8, atmoStrength: 0.7, atmoPower: 2.8, hasGate: true,  module: 'CRYO-COIL', ring: true },
-  { key: 'uranus',  name: 'URANUS',  x: 10800,  r: 60,  orbitAngle: 4.80, color: 0x88e0e6, atmoColor: 0x9ce8ee, atmoStrength: 1.0, atmoPower: 2.4, hasGate: true,  module: 'METHANE-CELL' },
-  { key: 'neptune', name: 'NEPTUNE', x: 13500,  r: 58,  orbitAngle: 5.70, color: 0x3a5fd8, atmoColor: 0x5588ff, atmoStrength: 1.2, atmoPower: 2.3, hasGate: true,  module: 'GENESIS-PARTICLE', isFinal: true },
+  { key: 'sun',     name: 'SUN',     x: 0,      r: 220, orbitAngle: 0,    color: 0xffcc66, emissive: 0xffaa33, isStar: true,
+    au: 0, astro: 'G-type main-sequence yulduz. Yadro harorati ~15 mln °C. Bizdan 149.6 mln km.' },
+  { key: 'earth',   name: 'EARTH',   x: 2000,   r: 36,  orbitAngle: 0.0,  color: 0x3a78d8, atmoColor: 0x6ab0ff, atmoStrength: 1.4, atmoPower: 2.2, hasGate: true,  module: 'BIO-SEED',
+    au: 1.0, astro: '3-sayyora. 71% suv, N₂/O₂ atmosfera. Yagona ma\'lum hayotli sayyora.' },
+  { key: 'mars',    name: 'MARS',    x: 3200,   r: 26,  orbitAngle: 0.85, color: 0xc1542a, atmoColor: 0xffaa66, atmoStrength: 0.5, atmoPower: 3.0, hasGate: true,  module: 'OXIDIZER',
+    au: 1.52, astro: 'Qizil sayyora. Olympus Mons — 21 km balandlik. Eski quruq daryolar izi.' },
+  { key: 'jupiter', name: 'JUPITER', x: 5800,   r: 130, orbitAngle: 2.10, color: 0xd9a87a, atmoColor: 0xffd9a0, atmoStrength: 0.8, atmoPower: 2.8, hasGate: true,  module: 'GRAV-COMPRESSOR',
+    au: 5.2, astro: 'Gaz giganti. Great Red Spot — 400 yildan ortiq bo\'ron. 79 ta tabiiy yo\'ldosh.' },
+  { key: 'saturn',  name: 'SATURN',  x: 8200,   r: 110, orbitAngle: 3.50, color: 0xe6c98a, atmoColor: 0xffe2a8, atmoStrength: 0.7, atmoPower: 2.8, hasGate: true,  module: 'CRYO-COIL', ring: true,
+    au: 9.5, astro: 'Halqalari muz va toshdan. Zohiraviy zichliki suvdan kam (0.69 g/cm³).' },
+  { key: 'uranus',  name: 'URANUS',  x: 10800,  r: 60,  orbitAngle: 4.80, color: 0x88e0e6, atmoColor: 0x9ce8ee, atmoStrength: 1.0, atmoPower: 2.4, hasGate: true,  module: 'METHANE-CELL',
+    au: 19.2, astro: 'Methan tufayli ko\'k-yashil. O\'qi 98° ga og\'gan — "yotgan" sayyora.' },
+  { key: 'neptune', name: 'NEPTUNE', x: 13500,  r: 58,  orbitAngle: 5.70, color: 0x3a5fd8, atmoColor: 0x5588ff, atmoStrength: 1.2, atmoPower: 2.3, hasGate: true,  module: 'GENESIS-PARTICLE', isFinal: true,
+    au: 30.1, astro: 'Quyosh tizimining eng uzoq sayyorasi. Shamol tezligi 2100 km/s gacha.' },
 ];
 
 const planetMeshes = {};
@@ -1403,7 +1525,7 @@ const glowTex = (() => {
 })();
 
 for (const p of PLANETS) {
-  const geo = new THREE.SphereGeometry(p.r, 64, 40);
+  const geo = new THREE.SphereGeometry(p.r, p.isStar ? 48 : PLANET_DETAIL, p.isStar ? 32 : Math.floor(PLANET_DETAIL * 0.65));
   let mat;
   if (p.isStar) {
     mat = new THREE.MeshBasicMaterial({ map: planetTextures[p.key], color: 0xffffff });
@@ -1426,7 +1548,7 @@ for (const p of PLANETS) {
 
   // Orbital path ring (thin glowing circle around the Sun, like solarsystemscope.com)
   if (!p.isStar) {
-    const ringGeo = new THREE.RingGeometry(p.x - 0.5, p.x + 0.5, 256, 1);
+    const ringGeo = new THREE.RingGeometry(p.x - 0.5, p.x + 0.5, 128, 1);
     const ringMat = new THREE.MeshBasicMaterial({
       color: 0x4488cc, transparent: true, opacity: 0.18,
       side: THREE.DoubleSide, depthWrite: false,
@@ -1573,6 +1695,34 @@ for (const p of PLANETS) {
     moduleMeshes[p.key] = mod;
   }
 }
+
+// ---------- Earth's Moon (Luna) — real orbital companion ----------
+let moonMesh = null;
+(function makeEarthMoon() {
+  const earth = planetMeshes['earth'];
+  if (!earth) return;
+  moonMesh = new THREE.Mesh(
+    new THREE.SphereGeometry(8, 16, 12),
+    new THREE.MeshStandardMaterial({
+      color: 0xaaaaaa, roughness: 0.95, metalness: 0.05,
+      emissive: 0x222222, emissiveIntensity: 0.08,
+    })
+  );
+  moonMesh.userData.orbitR = 58;
+  moonMesh.userData.orbitT = 0;
+  scene.add(moonMesh);
+})();
+
+// ---------- Ceres marker (Main Asteroid Belt dwarf planet) ----------
+(function makeCeresMarker() {
+  const beltR = (PLANETS[2].x + PLANETS[3].x) / 2;
+  const ceres = new THREE.Mesh(
+    new THREE.SphereGeometry(14, 16, 12),
+    new THREE.MeshStandardMaterial({ color: 0x9a9080, roughness: 1, metalness: 0.05 })
+  );
+  ceres.position.set(beltR * 0.92, 40, beltR * 0.38);
+  scene.add(ceres);
+})();
 
 // ---------- Pirate Ship (angular, sinister, blood-red accents) ----------
 function makePirateShip() {
@@ -1778,6 +1928,49 @@ function makeShip(hullColor = 0xe8faff, accent = 0x66ddff) {
     plumeMats.push(plumeMat);
   }
   group.userData.plumeMats = plumeMats;
+
+  // Belly sensor / docking light
+  const sensor = new THREE.Mesh(
+    new THREE.SphereGeometry(0.35, 8, 6),
+    new THREE.MeshBasicMaterial({ color: 0xff4444, transparent: true, opacity: 0.85 })
+  );
+  sensor.position.set(0, -0.55, 2.2);
+  group.add(sensor);
+
+  // RCS thruster blocks (reaction control)
+  const rcsMat = new THREE.MeshStandardMaterial({ color: 0x8899aa, metalness: 0.9, roughness: 0.35 });
+  for (const [x, y, z] of [[-1.1, 0.3, -2], [1.1, 0.3, -2], [-1.1, -0.3, 1], [1.1, -0.3, 1]]) {
+    const rcs = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.25, 0.25), rcsMat);
+    rcs.position.set(x, y, z);
+    group.add(rcs);
+  }
+
+  // Panel line accents
+  const panelLine = new THREE.Mesh(
+    new THREE.BoxGeometry(0.04, 0.04, 5.5),
+    accentMat
+  );
+  panelLine.position.set(0, 0.15, 0);
+  group.add(panelLine);
+
+  // Dorsal radar / comm dome
+  const radome = new THREE.Mesh(
+    new THREE.SphereGeometry(0.32, 10, 8),
+    new THREE.MeshStandardMaterial({ color: 0xb8c4d0, metalness: 0.65, roughness: 0.32 })
+  );
+  radome.position.set(0, 0.78, -0.6);
+  group.add(radome);
+
+  // Forward floodlights (docking / EVA)
+  for (const sx of [-0.55, 0.55]) {
+    const lamp = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.12, 0.14, 0.18, 8),
+      new THREE.MeshBasicMaterial({ color: 0xffffee })
+    );
+    lamp.rotation.x = Math.PI / 2;
+    lamp.position.set(sx, -0.35, 4.2);
+    group.add(lamp);
+  }
 
   // Self-illumination so ship is visible in deep space
   const selfLight = new THREE.PointLight(accent, 0.7, 24, 2);
@@ -2176,11 +2369,19 @@ function aidaCheckProximity() {
     const d = state.pos.distanceTo(planetMeshes[p.key].position);
     if (d < p.r * 6 && !aidaTriggered.has(p.key)) {
       aidaTriggered.add(p.key);
-      if (p.key === 'sun') aidaSay('Quyoshga juda yaqin keldingiz, pilot. Issiqlik halokatli.');
-      else if (p.key === 'earth') aidaSay(`${p.name} sektoridasiz. Jump Gate orqali Marsga oting.`);
-      else if (p.isFinal) aidaSay(`${p.name}. Bu yerda — Genesis zarrasi. Modulni oling va ortga qayting.`);
-      else aidaSay(`${p.name} sektoriga kirdingiz. Modul: ${p.module}`);
+      const auStr = p.au ? ` (${p.au} AU)` : '';
+      const fact = p.astro ? ` — ${p.astro}` : '';
+      if (p.key === 'sun') aidaSay('Quyoshga juda yaqin keldingiz. Korona harorati million daraja.' + fact, 7000);
+      else if (p.key === 'earth') aidaSay(`${p.name}${auStr} sektoridasiz. Jump Gate orqali Marsga oting.${fact}`, 8000);
+      else if (p.isFinal) aidaSay(`${p.name}${auStr} — Genesis zarrasi shu yerda. Modulni oling va qayting.${fact}`, 8000);
+      else aidaSay(`${p.name}${auStr} sektori. Modul: ${p.module}.${fact}`, 8000);
     }
+  }
+  // Black hole proximity lore
+  const dBh = state.pos.distanceTo(BLACK_HOLE.pos);
+  if (dBh < 2500 && !aidaTriggered.has('blackhole')) {
+    aidaTriggered.add('blackhole');
+    aidaSay('⚠  Sgr A* tipidagi supermassiv qora tuynuk — voqealar gorizonti ~180 u. Gravitatsiya ekstremal.', 9000);
   }
 }
 
@@ -2191,7 +2392,7 @@ let ws = null;
 let lastSendT = 0;
 
 function connectWS() {
-  setBootStatus('Connecting to server...');
+  bootStage(75, 'boot.connect');
   // Support dynamic WebSocket URL for split deployment (Vercel static + separate WS server)
   // Set window.WS_URL in index.html or configure via Vercel env var
   const wsUrl = window.WS_URL || (location.protocol === 'https:' ? 'wss:' : 'ws:') + '//' + location.host;
@@ -2417,6 +2618,8 @@ function sendChat(text) {
 launchBtn.addEventListener('click', () => {
   state.name = (nameInput.value || `Pilot-${Math.floor(Math.random()*9999)}`).slice(0, 20);
   splash.style.display = 'none';
+  onSplashHidden();
+  stopMenuMusic();
   // Save name for next session
   profile.name = state.name;
   saveProfile();
@@ -2459,13 +2662,18 @@ const fwd = new THREE.Vector3();
 const right = new THREE.Vector3();
 const up = new THREE.Vector3();
 
+function renderFrame() {
+  if (useComposerRender) composer.render();
+  else renderer.render(scene, camera);
+}
+
 let _firstFrameRendered = false;
 function tick() {
   if (perfStats) perfStats.begin();
   const dt = Math.min(clock.getDelta(), 0.05);
   if (!_firstFrameRendered) {
     _firstFrameRendered = true;
-    setBootStatus('Ready');
+    bootStage(100, 'boot.ready');
     setTimeout(hideBootLoader, 100);
   }
 
@@ -2476,7 +2684,7 @@ function tick() {
     updateHUD();
     updateAida(dt);
     animateWorld(dt);
-    composer.render();
+    renderFrame();
     if (perfStats) perfStats.end();
     requestAnimationFrame(tick);
     return;
@@ -2522,6 +2730,10 @@ function tick() {
   updateShootingStars(dt);
   if (typeof tickTutorial === 'function') tickTutorial(dt);
 
+  if (splash && splash.style.display !== 'none') {
+    updateMenuCamera(camera, dt);
+  }
+
   updateOthers(dt);
   updateCamera();
   updateHUD();
@@ -2532,7 +2744,7 @@ function tick() {
   lastSendT += dt;
   if (lastSendT > 0.08) { sendState(); lastSendT = 0; }
 
-  composer.render();
+  renderFrame();
   if (perfStats) perfStats.end();
   requestAnimationFrame(tick);
 }
@@ -2540,7 +2752,8 @@ function tick() {
 function handleControls(dt) {
   // Apply touch-look (right joystick) into mouseDX/DY for unified processing
   if (touchLook.x !== 0 || touchLook.y !== 0) {
-    const tFactor = 14 * dt * 60;
+    const touchSens = profile?.settings?.touchSensitivity ?? 1.0;
+    const tFactor = 14 * dt * 60 * touchSens;
     mouseDX += touchLook.x * tFactor;
     mouseDY += touchLook.y * tFactor;
   }
@@ -2652,10 +2865,13 @@ function checkInteractions() {
       mod.visible = false;
       state.modules.add(p.key);
       SFX.pickup();
+      playPickupSound();
+      showModuleAcquired(p.module, t('module.acquired'));
       profileOnModule(p.isFinal);
       aidaSay(`✓ Modul olindi: ${p.module}. Jami: ${state.modules.size}/${PLANETS.filter(x=>x.module).length}`);
       if (p.isFinal) {
         state.hvt = true;
+        triggerHvtFeedback(playHeartbeat);
         aidaSay('⚠  Genesis zarrasi sizda. Hammaga sizning joylashuvingiz uzatilmoqda. Yerga qayting!');
       }
     }
@@ -2971,7 +3187,7 @@ function drawMinimap() {
     ctx.setLineDash([]);
   }
 
-  // Black Hole (red event horizon)
+  // Black Hole — Sgr A* (red event horizon)
   if (typeof BLACK_HOLE !== 'undefined') {
     const bhx = cx + BLACK_HOLE.pos.x * scale;
     const bhy = cy + BLACK_HOLE.pos.z * scale;
@@ -2980,6 +3196,41 @@ function drawMinimap() {
     ctx.strokeStyle = 'rgba(255,80,80,0.7)';
     ctx.lineWidth = 1;
     ctx.beginPath(); ctx.arc(bhx, bhy, 5.5, 0, Math.PI * 2); ctx.stroke();
+  }
+
+  // Ceres (asteroid belt dwarf planet)
+  {
+    const beltR = (PLANETS[2].x + PLANETS[3].x) / 2;
+    const cwx = beltR * 0.92;
+    const cwz = beltR * 0.38;
+    ctx.fillStyle = '#b8a890';
+    ctx.beginPath();
+    ctx.arc(cx + cwx * scale, cy + cwz * scale, 2.2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Luna (Earth's moon)
+  if (moonMesh) {
+    const mx = cx + moonMesh.position.x * scale;
+    const my = cy + moonMesh.position.z * scale;
+    ctx.fillStyle = '#cccccc';
+    ctx.beginPath(); ctx.arc(mx, my, 1.6, 0, Math.PI * 2); ctx.fill();
+  }
+
+  // Space probes (cyan diamonds)
+  if (typeof probeObjects !== 'undefined') {
+    ctx.fillStyle = '#88ddff';
+    for (const o of probeObjects) {
+      const qx = cx + o.mesh.position.x * scale;
+      const qy = cy + o.mesh.position.z * scale;
+      ctx.beginPath();
+      ctx.moveTo(qx, qy - 2);
+      ctx.lineTo(qx + 2, qy);
+      ctx.lineTo(qx, qy + 2);
+      ctx.lineTo(qx - 2, qy);
+      ctx.closePath();
+      ctx.fill();
+    }
   }
 
   // Salvage containers (green tiny squares)
@@ -3236,6 +3487,8 @@ function updateHUD() {
   if (typeof updateEmoteBubbles === 'function') updateEmoteBubbles();
   // Sun lens flare
   if (typeof updateLensFlare === 'function') updateLensFlare();
+  updateHudEnhancements(state, PLANETS);
+  updateOnlineCounter(otherPlayers.size + 1, t);
 }
 
 // Markers — track planets & players via screen projection
@@ -3357,7 +3610,19 @@ function animateWorld(dt) {
     if (p.isStar) continue;
     const m = planetMeshes[p.key];
     m.rotation.y += dt * 0.05;
-    if (m.userData.clouds) m.userData.clouds.rotation.y += dt * 0.018; // slight parallax
+    if (m.userData.clouds) m.userData.clouds.rotation.y += dt * 0.018;
+  }
+  // Moon orbits Earth (~27.3 day period, compressed)
+  if (moonMesh) {
+    const earthPos = planetMeshes['earth'].position;
+    moonMesh.userData.orbitT += dt * 0.35;
+    const r = moonMesh.userData.orbitR;
+    moonMesh.position.set(
+      earthPos.x + Math.cos(moonMesh.userData.orbitT) * r,
+      earthPos.y + Math.sin(moonMesh.userData.orbitT * 0.3) * 8,
+      earthPos.z + Math.sin(moonMesh.userData.orbitT) * r
+    );
+    moonMesh.rotation.y += dt * 0.08;
   }
 }
 
@@ -3605,15 +3870,16 @@ function showDeathOverlay(reason) {
     document.body.appendChild(div);
   }
   div.innerHTML = `
-    <div style="border:1px solid rgba(255,80,80,0.5); padding:30px 50px; background:rgba(20,0,0,0.6); box-shadow:0 0 40px rgba(255,40,40,0.3); pointer-events:auto;">
-      <div style="font-size:11px; letter-spacing:6px; color:#ff4444;">MISSION FAILED</div>
+    <div class="death-card">
+      <div style="font-size:11px; letter-spacing:6px; color:#ff4444;">${t('death.title')}</div>
       <div style="font-size:22px; margin:14px 0; color:#ffcccc; letter-spacing:2px;">${escapeHtml(reason)}</div>
-      <div style="font-size:11px; opacity:0.8;">Modullar: ${state.modules.size}/${PLANETS.filter(x=>x.module).length} · Karma: ${state.karma}</div>
-      <div style="font-size:10px; opacity:0.6; margin-top:10px;">Qayta tug'ilish 4 sekundda...</div>
-      <button id="deathShareBtn" style="margin-top:14px; padding:8px 20px; background:rgba(255,80,80,0.15); border:1px solid rgba(255,80,80,0.5); color:#ffcccc; font-family:inherit; font-size:11px; letter-spacing:3px; cursor:pointer;">𝕏  ULASHISH</button>
+      <div style="font-size:11px; opacity:0.8;">${t('death.modules', { mods: `${state.modules.size}/${PLANETS.filter(x=>x.module).length}`, karma: state.karma })}</div>
+      <div style="font-size:10px; opacity:0.6; margin-top:10px;">${t('death.respawn')}</div>
+      <button id="deathShareBtn" style="margin-top:14px; padding:8px 20px; background:rgba(255,80,80,0.15); border:1px solid rgba(255,80,80,0.5); color:#ffcccc; font-family:inherit; font-size:11px; letter-spacing:3px; cursor:pointer;">${t('death.share')}</button>
     </div>
   `;
   div.style.display = 'flex';
+  animateDeathOverlay(div);
   const sb = div.querySelector('#deathShareBtn');
   if (sb) sb.addEventListener('click', () => shareDeath(reason));
 }
@@ -3733,7 +3999,7 @@ let blackHoleDisc = null;
   const g = new THREE.Group();
   // Event horizon
   const eh = new THREE.Mesh(
-    new THREE.SphereGeometry(BLACK_HOLE.r, 48, 32),
+    new THREE.SphereGeometry(BLACK_HOLE.r, 24, 16),
     new THREE.MeshBasicMaterial({ color: 0x000000 })
   );
   g.add(eh);
@@ -3766,7 +4032,7 @@ let blackHoleDisc = null;
     `
   });
   blackHoleDisc = new THREE.Mesh(
-    new THREE.RingGeometry(BLACK_HOLE.r * 1.3, BLACK_HOLE.r * 4.5, 96, 1),
+    new THREE.RingGeometry(BLACK_HOLE.r * 1.3, BLACK_HOLE.r * 4.5, 48, 1),
     discMat
   );
   blackHoleDisc.rotation.x = Math.PI / 2.3;
@@ -4388,72 +4654,90 @@ function updateProbes(dt) {
 // PHASE 2: Asteroidlar, Qaroqchilar, Lazerlar, Voyager, Flare, Docking, G'alaba
 // =============================================================
 
-// ---------- ASTEROIDS (Mars↔Yupiter belti) ----------
+// ---------- ASTEROIDS (Main Belt — InstancedMesh for performance) ----------
 const asteroids = [];
+let asteroidInstMesh = null;
+const _astDummy = new THREE.Object3D();
+
 function buildAsteroidBelt() {
   const beltR = (PLANETS[2].x + PLANETS[3].x) / 2;
   const beltSpread = 1200;
-  const N = 380;
+  const N_BELT = 120;
+  const N_NEAR = 25;
+  const total = N_BELT + N_NEAR;
   const geo = new THREE.IcosahedronGeometry(1, 0);
-  const mat = new THREE.MeshStandardMaterial({ color: 0xb09878, roughness: 0.92, metalness: 0.1, emissive: 0x553322, emissiveIntensity: 0.15 });
-  for (let i = 0; i < N; i++) {
+  const mat = new THREE.MeshStandardMaterial({
+    color: 0xb09878, roughness: 0.92, metalness: 0.1,
+    emissive: 0x553322, emissiveIntensity: 0.12,
+  });
+  asteroidInstMesh = new THREE.InstancedMesh(geo, mat, total);
+  asteroidInstMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  let idx = 0;
+  for (let i = 0; i < N_BELT; i++) {
     const angle = Math.random() * Math.PI * 2;
     const r = beltR + (Math.random() - 0.5) * beltSpread;
     const y = (Math.random() - 0.5) * 220;
-    const size = 4 + Math.random() * 18;
-    const m = new THREE.Mesh(geo, mat);
-    m.position.set(Math.cos(angle) * r, y, Math.sin(angle) * r);
-    m.scale.setScalar(size);
-    m.userData = {
-      angle, r, y, size,
+    const size = 4 + Math.random() * 16;
+    const pos = new THREE.Vector3(Math.cos(angle) * r, y, Math.sin(angle) * r);
+    asteroids.push({
+      idx: idx++, size, pos, angle, r, y,
       angVel: 0.02 / Math.sqrt(r / 1000) * (Math.random() < 0.5 ? 1 : -1),
       spin: new THREE.Vector3(Math.random(), Math.random(), Math.random()).multiplyScalar(0.5),
-    };
-    scene.add(m);
-    asteroids.push(m);
+      rot: new THREE.Euler(Math.random() * 6, Math.random() * 6, Math.random() * 6),
+      belt: true,
+    });
   }
-  // Additional near-Earth asteroid cloud (scattered around Earth)
   const earthPos = planetMeshes['earth'].position;
-  for (let i = 0; i < 80; i++) {
+  for (let i = 0; i < N_NEAR; i++) {
     const ang = Math.random() * Math.PI * 2;
     const dist = 250 + Math.random() * 1300;
-    const x = earthPos.x + Math.cos(ang) * dist;
-    const y = (Math.random() - 0.5) * 400;
-    const z = earthPos.z + Math.sin(ang) * dist;
-    const m = new THREE.Mesh(geo, mat);
-    m.position.set(x, y, z);
-    const s = 4 + Math.random() * 9;
-    m.scale.setScalar(s);
-    m.rotation.set(Math.random()*6, Math.random()*6, Math.random()*6);
-    m.userData = { angV: new THREE.Vector3((Math.random()-0.5)*0.4, (Math.random()-0.5)*0.4, (Math.random()-0.5)*0.4), size: s, orbit: false };
-    scene.add(m);
-    asteroids.push(m);
+    const size = 4 + Math.random() * 9;
+    const pos = new THREE.Vector3(
+      earthPos.x + Math.cos(ang) * dist,
+      (Math.random() - 0.5) * 400,
+      earthPos.z + Math.sin(ang) * dist
+    );
+    asteroids.push({
+      idx: idx++, size, pos, orbit: false,
+      angV: new THREE.Vector3((Math.random() - 0.5) * 0.4, (Math.random() - 0.5) * 0.4, (Math.random() - 0.5) * 0.4),
+      rot: new THREE.Euler(Math.random() * 6, Math.random() * 6, Math.random() * 6),
+    });
   }
+  scene.add(asteroidInstMesh);
+  syncAsteroidMatrices();
 }
-buildAsteroidBelt();
+
+function syncAsteroidMatrices() {
+  if (!asteroidInstMesh) return;
+  for (const a of asteroids) {
+    _astDummy.position.copy(a.pos);
+    _astDummy.rotation.copy(a.rot);
+    _astDummy.scale.setScalar(a.size);
+    _astDummy.updateMatrix();
+    asteroidInstMesh.setMatrixAt(a.idx, _astDummy.matrix);
+  }
+  asteroidInstMesh.instanceMatrix.needsUpdate = true;
+}
 
 function updateAsteroids(dt) {
   for (const a of asteroids) {
-    if (a.userData.angVel !== undefined) {
-      // Belt asteroid: orbital motion
-      a.userData.angle += a.userData.angVel * dt;
-      a.position.x = Math.cos(a.userData.angle) * a.userData.r;
-      a.position.z = Math.sin(a.userData.angle) * a.userData.r;
-      a.rotation.x += a.userData.spin.x * dt;
-      a.rotation.y += a.userData.spin.y * dt;
-    } else if (a.userData.angV) {
-      // Near-Earth scattered: just tumble in place
-      a.rotation.x += a.userData.angV.x * dt;
-      a.rotation.y += a.userData.angV.y * dt;
-      a.rotation.z += a.userData.angV.z * dt;
+    if (a.belt) {
+      a.angle += a.angVel * dt;
+      a.pos.x = Math.cos(a.angle) * a.r;
+      a.pos.z = Math.sin(a.angle) * a.r;
+      a.rot.x += a.spin.x * dt;
+      a.rot.y += a.spin.y * dt;
+    } else if (a.angV) {
+      a.rot.x += a.angV.x * dt;
+      a.rot.y += a.angV.y * dt;
+      a.rot.z += a.angV.z * dt;
     }
-    // Player collision (faqat yaqin asteroidlar uchun)
-    const dx = state.pos.x - a.position.x;
-    if (Math.abs(dx) > 50) continue;
-    const d = state.pos.distanceTo(a.position);
-    if (d < a.userData.size + 2.5) {
-      const n = tmpVec.copy(state.pos).sub(a.position).normalize();
-      state.pos.copy(a.position).addScaledVector(n, a.userData.size + 3);
+    const dx = state.pos.x - a.pos.x;
+    if (Math.abs(dx) > 80) continue;
+    const d = state.pos.distanceTo(a.pos);
+    if (d < a.size + 2.5) {
+      const n = tmpVec.copy(state.pos).sub(a.pos).normalize();
+      state.pos.copy(a.pos).addScaledVector(n, a.size + 3);
       const vn = state.vel.dot(n);
       if (vn < 0) state.vel.addScaledVector(n, -1.7 * vn);
       state.hull -= 4;
@@ -4461,7 +4745,9 @@ function updateAsteroids(dt) {
       else aidaSay('⚠  Asteroid! Korpus shikastlandi.');
     }
   }
+  syncAsteroidMatrices();
 }
+buildAsteroidBelt();
 
 // ---------- WEAPONS (multi-weapon registry) ----------
 const WEAPONS = [
@@ -4557,8 +4843,8 @@ function updateLasers(dt) {
     // Asteroid hit
     if (!dead) {
       for (const a of asteroids) {
-        if (Math.abs(l.mesh.position.x - a.position.x) > 40) continue;
-        if (l.mesh.position.distanceTo(a.position) < a.userData.size + 1) { dead = true; break; }
+        if (Math.abs(l.mesh.position.x - a.pos.x) > 40) continue;
+        if (l.mesh.position.distanceTo(a.pos) < a.size + 1) { dead = true; break; }
       }
     }
     // Enemy faction player hit (PvP)
@@ -5055,6 +5341,7 @@ function spawnPirate(near) {
     }
   }
   mesh.position.copy(near).add(offset);
+  orientShipToTarget(mesh, state.pos, 1, 0.35);
   // Bright beacon so player can SEE the pirate type from afar
   const beacon = new THREE.Sprite(new THREE.SpriteMaterial({
     map: glowTex, color: kind.beaconColor, transparent: true, opacity: 0.9,
@@ -5073,6 +5360,23 @@ function spawnPirate(near) {
   aidaSay(`⚠  ${labels[kindKey]} aniqlandi!`);
 }
 
+const _shipOrientEuler = new THREE.Euler(0, 0, 0, 'YXZ');
+const _shipOrientQ = new THREE.Quaternion();
+
+/** Stable yaw/pitch orientation — no wild roll/spin */
+function orientShipToTarget(mesh, targetPos, dt, maxPitch = 0.45) {
+  const dx = targetPos.x - mesh.position.x;
+  const dy = targetPos.y - mesh.position.y;
+  const dz = targetPos.z - mesh.position.z;
+  const horiz = Math.hypot(dx, dz);
+  if (horiz < 0.5 && Math.abs(dy) < 0.5) return;
+  const yaw = Math.atan2(dx, dz);
+  const pitch = THREE.MathUtils.clamp(Math.atan2(-dy, horiz), -maxPitch, maxPitch);
+  _shipOrientEuler.set(pitch, yaw, 0);
+  _shipOrientQ.setFromEuler(_shipOrientEuler);
+  mesh.quaternion.slerp(_shipOrientQ, Math.min(1, dt * 4.5));
+}
+
 function updatePirates(dt) {
   pirateSpawnT -= dt;
   const maxPirates = state.hvt ? 6 : 3;
@@ -5081,7 +5385,6 @@ function updatePirates(dt) {
     pirateSpawnT = state.hvt ? 8 : 20;
   }
 
-  const lookM = new THREE.Matrix4();
   for (let i = pirates.length - 1; i >= 0; i--) {
     const p = pirates[i];
     const k = p.kind;
@@ -5090,21 +5393,22 @@ function updatePirates(dt) {
     if (d > 1) toPlayer.divideScalar(d);
 
     p.vel.addScaledVector(toPlayer, k.accel * dt);
-    // Interceptor strafing: tangent oscillation
+    // Interceptor strafing: tangent only (no vertical flip)
     if (k.strafe) {
       p.strafePhase += dt * 1.8;
-      // Build tangent perpendicular to toPlayer
       const up = new THREE.Vector3(0, 1, 0);
-      const tang = new THREE.Vector3().crossVectors(toPlayer, up).normalize();
-      p.vel.addScaledVector(tang, Math.sin(p.strafePhase) * 25 * dt);
+      const tang = new THREE.Vector3().crossVectors(toPlayer, up);
+      if (tang.lengthSq() > 0.001) {
+        tang.normalize();
+        p.vel.addScaledVector(tang, Math.sin(p.strafePhase) * 18 * dt);
+      }
     }
     p.vel.multiplyScalar(Math.pow(0.7, dt));
     const sp = p.vel.length();
     if (sp > k.maxSpeed) p.vel.multiplyScalar(k.maxSpeed / sp);
     p.mesh.position.addScaledVector(p.vel, dt);
 
-    lookM.lookAt(p.mesh.position, state.pos, new THREE.Vector3(0, 1, 0));
-    p.mesh.quaternion.setFromRotationMatrix(lookM);
+    orientShipToTarget(p.mesh, state.pos, dt, 0.35);
 
     if (d > 2000) {
       scene.remove(p.mesh);
@@ -5634,23 +5938,27 @@ function showVictory() {
   const div = document.createElement('div');
   div.id = 'victory';
   const karmaLabel = state.karma >= 0 ? `+${state.karma} (◆ SAVIOR)` : `${state.karma} (◆ RAIDER)`;
+  const modCount = `${state.modules.size}/${PLANETS.filter(x=>x.module).length}`;
   div.innerHTML = `
-    <h1>✦ MISSION COMPLETE ✦</h1>
-    <h2>HUMANITY SAVED</h2>
-    <p>${escapeHtml(state.name)}, siz <b>Genesis zarrasini</b> Yerga olib qaytdingiz.</p>
-    <p>Insoniyat omon qoldi. Sizning oltin yodgorligingiz Yer orbitasida o'rnatildi.</p>
-    <div class="stats">
-      <div>KARMA: <b>${karmaLabel}</b></div>
-      <div>QAROQCHI YO'Q QILINDI: <b>${state.kills}</b></div>
-      <div>YIG'ILGAN MODULLAR: <b>${state.modules.size}/${PLANETS.filter(x=>x.module).length}</b></div>
-      <div>ZONDLAR TOPILDI: <b>${probeObjects.filter(o=>o.visited).length}/${probeObjects.length}</b></div>
-    </div>
-    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
-      <button id="victoryShareBtn">𝕏  ULASHISH</button>
-      <button onclick="location.reload()">▶ NEW GAME</button>
+    <div class="victory-card">
+      <h1>${t('victory.title')}</h1>
+      <h2>${t('victory.subtitle')}</h2>
+      <p>${t('victory.body1', { name: escapeHtml(state.name) })}</p>
+      <p>${t('victory.body2')}</p>
+      <div class="stats">
+        <div>${t('victory.karma')}: <b>${karmaLabel}</b></div>
+        <div>${t('victory.kills')}: <b>${state.kills}</b></div>
+        <div>${t('victory.modules')}: <b>${modCount}</b></div>
+        <div>${t('victory.probes')}: <b>${probeObjects.filter(o=>o.visited).length}/${probeObjects.length}</b></div>
+      </div>
+      <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:14px;">
+        <button id="victoryShareBtn">${t('victory.share')}</button>
+        <button onclick="location.reload()">${t('victory.newGame')}</button>
+      </div>
     </div>
   `;
   document.body.appendChild(div);
+  animateVictoryScreen(div);
   const sb = div.querySelector('#victoryShareBtn');
   if (sb) sb.addEventListener('click', shareVictory);
 }
@@ -5750,11 +6058,32 @@ function generateShareCard({ title, subtitle, stats, accent, faction }) {
     ctx.fillText(stats[keys[i]], x, y + 42);
   }
 
-  // Footer URL
+  // Footer URL + QR block
+  const playUrl = location.origin + location.pathname;
   ctx.fillStyle = '#aef0ff';
-  ctx.font = '15px Consolas, monospace';
+  ctx.font = '15px JetBrains Mono, Consolas, monospace';
   ctx.textAlign = 'center';
-  ctx.fillText(location.host || 'odyssey.game', W / 2, H - 50);
+  ctx.fillText(playUrl.replace(/^https?:\/\//, ''), W / 2, H - 72);
+  ctx.font = '11px JetBrains Mono, Consolas, monospace';
+  ctx.fillStyle = '#7cd4ff';
+  ctx.fillText('SCAN · PLAY · SURVIVE', W / 2, H - 48);
+  // Decorative QR-style matrix (deterministic from URL)
+  const qrSize = 88, qx = W - 130, qy = H - 195;
+  ctx.fillStyle = 'rgba(255,255,255,0.95)';
+  ctx.fillRect(qx - 4, qy - 4, qrSize + 8, qrSize + 8);
+  let h = 0;
+  for (let i = 0; i < playUrl.length; i++) h = ((h << 5) - h + playUrl.charCodeAt(i)) | 0;
+  const cells = 11;
+  const cs = qrSize / cells;
+  for (let r = 0; r < cells; r++) {
+    for (let c = 0; c < cells; c++) {
+      const bit = (h + r * 17 + c * 31) & 8;
+      if (bit) {
+        ctx.fillStyle = '#020611';
+        ctx.fillRect(qx + c * cs, qy + r * cs, cs - 1, cs - 1);
+      }
+    }
+  }
 
   return canvas;
 }
@@ -5936,6 +6265,7 @@ function openTrade() {
   }
   tradeUI.targetName.textContent = `${target.name}  (${target.dist.toFixed(0)}u)`;
   tradeUI.panel.style.display = 'block';
+  tradeUI.panel.classList.add('open');
   tradeUI.panel.dataset.targetId = target.id;
   // Disable buttons that would over-deduct
   for (const btn of tradeUI.panel.querySelectorAll('[data-trade]')) {
@@ -5949,6 +6279,7 @@ function openTrade() {
 
 window.closeTrade = function() {
   tradeUI.panel.style.display = 'none';
+  tradeUI.panel.classList.remove('open');
 };
 
 for (const btn of tradeUI.panel.querySelectorAll('[data-trade]')) {
@@ -6091,6 +6422,9 @@ const defaultProfile = () => ({
   settings: {
     fov: 62,           // 50-90
     sensitivity: 1.0,  // 0.3-2.5
+    touchSensitivity: 1.0,
+    uiScale: 1.0,
+    graphicsPreset: 'medium', // low | medium | ultra
     bloomOn: true,
     sfxVolume: 0.55,   // 0.0-1.0
     musicVolume: 0.42, // 0.0-1.0
@@ -7538,10 +7872,30 @@ function applySettings() {
   if (typeof musicNodes !== 'undefined' && musicNodes && musicNodes.musicGain && audioCtx) {
     musicNodes.musicGain.gain.linearRampToValueAtTime(musicMuted ? 0 : s.musicVolume, audioCtx.currentTime + 0.05);
   }
+  updateHowlerVolumes(s.sfxVolume, s.musicVolume);
   // Apply bloom toggle
   if (typeof bloomPass !== 'undefined' && bloomPass) {
     bloomPass.enabled = !!s.bloomOn;
   }
+  // Graphics presets
+  const preset = s.graphicsPreset || 'medium';
+  const pr = preset === 'low' ? 1 : preset === 'ultra' ? Math.min(window.devicePixelRatio, 2) : Math.min(window.devicePixelRatio, 1.35);
+  renderer.setPixelRatio(pr);
+  composer.setPixelRatio(pr);
+  if (bloomPass) {
+    bloomPass.enabled = preset !== 'low' && !!s.bloomOn;
+    bloomPass.strength = preset === 'ultra' ? 0.65 : preset === 'low' ? 0.2 : 0.45;
+  }
+  useComposerRender = preset !== 'low' && !!s.bloomOn;
+  lensFlareEnabledFlag = preset !== 'low';
+  if (asteroidInstMesh) asteroidInstMesh.visible = true;
+  for (const sl of perfVisuals.starLayers) {
+    if (sl) sl.visible = preset !== 'low';
+  }
+  if (typeof cosmicDust !== 'undefined' && cosmicDust) {
+    cosmicDust.visible = preset === 'ultra';
+  }
+  applyUiScale(s.uiScale ?? 1);
   // FOV applied per-frame in updateCamera (reads profile.settings.fov)
   // Sensitivity applied per-frame in handleControls
 }
@@ -7571,16 +7925,32 @@ function buildPauseMenu() {
   overlay.innerHTML = `
     <div class="stats-modal" style="min-width: 480px;">
       <button class="close-btn" data-close>×</button>
-      <div class="title">⏸ PAUSED</div>
+      <div class="title">${t('pause.title')}</div>
       <div class="pilot-name">${escapeHtml(state.name || 'PILOT')}</div>
       <div class="stat-grid" style="grid-template-columns: 1fr;">
         <label class="setting-row">
-          <span>FIELD OF VIEW: <b id="fovVal">${s.fov}°</b></span>
+          <span>${t('pause.graphics')}: <b id="gfxVal">${(s.graphicsPreset || 'medium').toUpperCase()}</b></span>
+          <select id="gfxSelect">
+            <option value="low" ${s.graphicsPreset === 'low' ? 'selected' : ''}>${t('graphics.low')}</option>
+            <option value="medium" ${(!s.graphicsPreset || s.graphicsPreset === 'medium') ? 'selected' : ''}>${t('graphics.medium')}</option>
+            <option value="ultra" ${s.graphicsPreset === 'ultra' ? 'selected' : ''}>${t('graphics.ultra')}</option>
+          </select>
+        </label>
+        <label class="setting-row">
+          <span>${t('pause.fov')}: <b id="fovVal">${s.fov}°</b></span>
           <input type="range" min="50" max="90" step="1" id="fovSlider" value="${s.fov}">
         </label>
         <label class="setting-row">
-          <span>MOUSE SENSITIVITY: <b id="sensVal">${s.sensitivity.toFixed(2)}x</b></span>
+          <span>${t('pause.sensitivity')}: <b id="sensVal">${s.sensitivity.toFixed(2)}x</b></span>
           <input type="range" min="0.3" max="2.5" step="0.05" id="sensSlider" value="${s.sensitivity}">
+        </label>
+        <label class="setting-row">
+          <span>${t('pause.touchSens')}: <b id="touchSensVal">${(s.touchSensitivity ?? 1).toFixed(2)}x</b></span>
+          <input type="range" min="0.3" max="2.5" step="0.05" id="touchSensSlider" value="${s.touchSensitivity ?? 1}">
+        </label>
+        <label class="setting-row">
+          <span>${t('pause.uiScale')}: <b id="uiScaleVal">${Math.round((s.uiScale ?? 1) * 100)}%</b></span>
+          <input type="range" min="0.75" max="1.3" step="0.05" id="uiScaleSlider" value="${s.uiScale ?? 1}">
         </label>
         <label class="setting-row">
           <span>SFX VOLUME: <b id="sfxVal">${Math.round(s.sfxVolume * 100)}%</b></span>
@@ -7591,18 +7961,18 @@ function buildPauseMenu() {
           <input type="range" min="0" max="1" step="0.05" id="musicSlider" value="${s.musicVolume}">
         </label>
         <label class="setting-row">
-          <span>BLOOM POSTPROCESS</span>
+          <span>${t('pause.bloom')}</span>
           <input type="checkbox" id="bloomToggle" ${s.bloomOn ? 'checked' : ''}>
         </label>
       </div>
       <div style="display:flex; gap:8px; margin-top:14px; justify-content:center; flex-wrap:wrap;">
-        <button class="buy-btn" data-resume>▶ RESUME</button>
-        <button class="buy-btn" data-shop>⛨ SHIPYARD</button>
-        <button class="buy-btn" data-stats>⬢ PILOT FILE</button>
-        <button class="buy-btn" data-tutorial>? TUTORIAL</button>
+        <button class="buy-btn" data-resume>${t('pause.resume')}</button>
+        <button class="buy-btn" data-shop>${t('splash.shipyard')}</button>
+        <button class="buy-btn" data-stats>${t('splash.pilot')}</button>
+        <button class="buy-btn" data-tutorial>${t('pause.tutorial')}</button>
       </div>
       <div style="margin-top:10px; font-size:10px; opacity:0.55; text-align:center;">
-        Press [P] yoki [Esc] yopish · sozlamalar avtomatik saqlanadi
+        ${t('pause.hint')}
       </div>
     </div>
   `;
@@ -7622,8 +7992,18 @@ function buildPauseMenu() {
   };
   slider('fovSlider', 'fovVal', 'fov', v => `${v|0}°`);
   slider('sensSlider', 'sensVal', 'sensitivity', v => `${v.toFixed(2)}x`);
+  slider('touchSensSlider', 'touchSensVal', 'touchSensitivity', v => `${v.toFixed(2)}x`);
+  slider('uiScaleSlider', 'uiScaleVal', 'uiScale', v => `${Math.round(v*100)}%`, (v) => applyUiScale(v));
   slider('sfxSlider', 'sfxVal', 'sfxVolume', v => `${Math.round(v*100)}%`);
   slider('musicSlider', 'musicVal', 'musicVolume', v => `${Math.round(v*100)}%`);
+  const gfxSel = overlay.querySelector('#gfxSelect');
+  gfxSel.addEventListener('change', () => {
+    profile.settings.graphicsPreset = gfxSel.value;
+    const valEl = overlay.querySelector('#gfxVal');
+    if (valEl) valEl.textContent = gfxSel.value.toUpperCase();
+    saveProfile();
+    applySettings();
+  });
   const bloomChk = overlay.querySelector('#bloomToggle');
   bloomChk.addEventListener('change', () => {
     profile.settings.bloomOn = bloomChk.checked;
@@ -8359,6 +8739,7 @@ renderLeaderboardSplash();
 const _bpSeasonReset = checkBpSeasonReset();
 renderBattlePassSplash();
 renderFriendsSplash();
+renderFactionSplash();
 // Refresh friends list shortly after boot (for online statuses)
 setTimeout(() => {
   fetchFriends().then(() => {
@@ -8383,11 +8764,10 @@ setTimeout(() => {
   }
 }, 600);
 
-// Stats + Shop buttons on splash
+// Stats + Shop buttons on splash + UX init
+initSplashUI({ splash, t, profile, PLANETS });
 (function injectSplashButtons() {
   if (!splash) return;
-  const wrap = document.createElement('div');
-  wrap.style.cssText = 'display:flex; gap:8px; justify-content:center; margin-top:12px; flex-wrap:wrap;';
   const mkBtn = (i18nKey, fn) => {
     const b = document.createElement('button');
     b.dataset.i18n = i18nKey;
@@ -8396,20 +8776,22 @@ setTimeout(() => {
     b.addEventListener('click', (e) => { e.preventDefault(); fn(); });
     return b;
   };
-  wrap.appendChild(mkBtn('splash.pilot', buildStatsScreen));
-  wrap.appendChild(mkBtn('splash.shipyard', buildShopScreen));
-  // Transfer button (manual text — not yet i18n'd)
   const transferBtn = document.createElement('button');
-  transferBtn.textContent = '☁ TRANSFER';
+  transferBtn.dataset.i18n = 'splash.transfer';
+  transferBtn.textContent = t('splash.transfer');
   transferBtn.style.cssText = 'background:transparent; border:1px solid rgba(120,220,255,0.4); color:#aef0ff; padding:8px 16px; cursor:pointer; font-family:inherit; font-size:11px; letter-spacing:3px;';
   transferBtn.addEventListener('click', (e) => { e.preventDefault(); openTransferModal(); });
-  wrap.appendChild(transferBtn);
-  if (launchBtn && launchBtn.parentNode) {
-    launchBtn.parentNode.insertBefore(wrap, launchBtn.nextSibling);
-  } else {
-    splash.appendChild(wrap);
-  }
+  mountSplashActionButtons([
+    mkBtn('splash.pilot', buildStatsScreen),
+    mkBtn('splash.shipyard', buildShopScreen),
+    transferBtn,
+  ]);
 })();
+initHudUI();
+initFeedbackUI();
+initInstallPrompt(t);
+playMenuMusic();
+applyUiScale(profile.settings?.uiScale ?? readUiScale());
 
 // ---------- FACTION UI (selector modal + splash badge) ----------
 function openFactionModal() {
@@ -8418,8 +8800,8 @@ function openFactionModal() {
   overlay.id = 'faction-modal';
   overlay.innerHTML = `
     <div class="fm-inner">
-      <div class="fm-title">FRAKSIYA TANLANG</div>
-      <div class="fm-sub">Bu tanlov sizning Yer'dagi pozitsiyangizni belgilaydi.<br/>Boshqa fraksiyalar dushman, o'z fraksiyangiz ittifoqdosh.</div>
+      <div class="fm-title">${t('faction.choose')}</div>
+      <div class="fm-sub">${t('faction.intro')}</div>
       <div class="fm-cards">
         ${Object.values(FACTIONS).map(f => `
           <button class="fm-card ${profile.faction === f.id ? 'current' : ''}" data-id="${f.id}"
@@ -8461,11 +8843,14 @@ function openFactionModal() {
 
 function renderFactionSplash() {
   if (!splash) return;
+  const parent = document.getElementById('splash-social-panel') || splash;
   let panel = document.getElementById('faction-splash');
   if (!panel) {
     panel = document.createElement('div');
     panel.id = 'faction-splash';
-    splash.appendChild(panel);
+    parent.appendChild(panel);
+  } else if (panel.parentNode !== parent) {
+    parent.appendChild(panel);
   }
   const f = getFaction(profile.faction);
   if (!f) {
@@ -8485,7 +8870,6 @@ function renderFactionSplash() {
   panel.querySelector('button').addEventListener('click', openFactionModal);
 }
 window.addEventListener('faction-changed', renderFactionSplash);
-renderFactionSplash();
 
 // Force selection on first run
 if (!profile.faction) {
@@ -8731,6 +9115,7 @@ const touchLook = { x: 0, y: 0 }; // continuous look-stick value (-1..1)
       <button class="tc-btn boost"  id="tc-boost">BOOST</button>
       <button class="tc-btn brake"  id="tc-brake">BRAKE</button>
       <button class="tc-btn weapon" id="tc-weapon">1</button>
+      <button class="tc-btn emote" id="tc-emote">😀</button>
     </div>`;
   document.body.appendChild(overlay);
 
@@ -8774,6 +9159,25 @@ const touchLook = { x: 0, y: 0 }; // continuous look-stick value (-1..1)
     if (typeof selectWeapon === 'function') selectWeapon(next);
     wpnBtn.textContent = String(next + 1);
   });
+
+  const emoteBtn = document.getElementById('tc-emote');
+  if (emoteBtn) {
+    emoteBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      keys.add('KeyB');
+      if (typeof openEmoteWheel === 'function') openEmoteWheel();
+    });
+    emoteBtn.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      keys.delete('KeyB');
+      if (typeof closeEmoteWheel === 'function') closeEmoteWheel(true);
+    });
+    emoteBtn.addEventListener('touchcancel', (e) => {
+      e.preventDefault();
+      keys.delete('KeyB');
+      if (typeof closeEmoteWheel === 'function') closeEmoteWheel(false);
+    });
+  }
 
   function bindHoldKey(btnId, code) {
     const b = document.getElementById(btnId);

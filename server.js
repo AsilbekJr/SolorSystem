@@ -25,6 +25,10 @@ const MAX_TRADE_HZ      = 4;                     // per-client trade messages/se
 const MAX_PAYLOAD_BYTES = 8 * 1024;              // hard cap per WS frame
 const STATIC_CACHE_SEC  = 0;                     // set >0 in production
 
+const STATIC_ROOT = fs.existsSync(path.join(__dirname, 'dist', 'index.html'))
+  ? path.join(__dirname, 'dist')
+  : __dirname;
+
 const MIME = {
   '.html': 'text/html; charset=utf-8',
   '.js':   'application/javascript; charset=utf-8',
@@ -700,8 +704,9 @@ const server = http.createServer((req, res) => {
   }
 
   if (url === '/') url = '/index.html';
-  const filePath = path.join(__dirname, url);
-  if (!filePath.startsWith(__dirname)) {
+  const filePath = path.join(STATIC_ROOT, url.replace(/^\//, ''));
+  const rootResolved = path.resolve(STATIC_ROOT);
+  if (!path.resolve(filePath).startsWith(rootResolved)) {
     res.writeHead(403); return res.end('Forbidden');
   }
   fs.readFile(filePath, (err, data) => {
